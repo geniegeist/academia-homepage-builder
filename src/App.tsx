@@ -59,7 +59,7 @@ function App() {
           FileSaver.saveAs(blob, 'homepage.zip');
         });
       });
-  }, []);
+  }, [theme, editorValue]);
 
   return (
     <div className="App">
