@@ -3,11 +3,6 @@
   height: 100%;
 }
 
-.result {
-  font-family: 'Lora', serif;
-  padding: calc(1em + 1ex);
-}
-
 .cm-line {
   white-space: pre-wrap;
 }
@@ -16,22 +11,6 @@
   max-width: 90%;
 }
 
-.result h1 {
-  font-size: 2em;
-  font-weight: 500;
-}
-
-.result h2 {
-  font-family: 'Marcellus SC', serif;
-  color: #a81010;
-  font-size: 1.25em;
-  font-weight: 500;
-}
-
-.result p {
-  font-size: 0.9em;
-}
-
-.result math {
-  font-size: 10px;
+.result img {
+  width: 100%;
 }

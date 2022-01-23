@@ -1,72 +1,50 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
+import remarkGfm from 'remark-gfm';
+import rehypeSlug from 'rehype-slug';
 import rehypeMathjax from 'rehype-mathjax';
 import CodeMirrorEditor from './CodeMirror';
+import type { Theme } from './themes/theme';
+import amandaTheme from './themes/amanda-burcroff';
+import dexterTheme from './themes/dexter-chua';
 import './App.css';
-
-const defaultValue = `# Viet Duc Nguyen
-
-## About Me
-
-I have been a PhD student at [Harvard](www.google.de) since September 2018. Previously, I did my undergraduate and Part III at [Cambridge](www.cambridge.co.uk) (2014–2018).
-
-## Contact Me
-
-You can email me at [dexter@math.harvard.edu](mailto:dexter@math.harvard.edu). My office is at 531.
-
-## Adams Spectral Sequence for $tmf$
-
-I have documented the calculation of the Adams spectral sequence of $tmf$ at the prime $2$ here (warning: this downloads a 12MB file behind the scenes).
-
-This calculation was made with computer assistance. There is an online version of the software, and the source can be found on GitHub. See the README on GitHub for technical details.
-
-The software computes the $E_2$ page and products, and propagates differentials via the Leibniz rule. The program is capable of resolving an arbitrary (finite dimensional or finitely generated) Steenrod module and assisting the computation of the associated Adams spectral sequence. It is also designed with the intention to be able to aid other spectral sequence calculations (as long as the modules are over $\\mathbb F_p$), but no such applications have been coded at the moment. It was initially developed by Hood Chatham and I later joined the development.
-
-The save file for the calculation can be found here, which can be imported into the resolver to reproduce the calculation. (However, doing it on the online version above is unwise).
-
-## Expository Writings
-
-Some miscellaneous expository writings. The word "expository" refers to the lack of originality, as opposed to any claim of comprehensibility or correctness.
-
-Clicking the title below will lead to a web version of the note, which is an experimental feature — let me know if anything seems broken. Click "pdf" for a downloadable pdf version.
-
-- [Construction of synthetic spectra (pdf)](www.google.de)
-- [Adams spectral sequence of $tmf \\land \\mathbb R\\mathbb P^{\\infty}$](www.google.de)
-- [Borwein–Borwein integrals and sums (pdf)](www.google.de)
-
-
-## Cambridge Course Notes
-
-When I was in Cambridge, I typed up my lecture notes for the courses I attended. They can be found [here](www.google.de).
-
-## Privacy Statement
-
-I have a [Privacy Statement](www.google.de) as required by law (maybe).
-`;
+import './themes/dexter-chua.css';
+import './themes/amanda-burcroff.css';
 
 function App() {
-  const [editorValue, setEditorValue] = useState(defaultValue);
+  const [theme, setTheme] = useState<Theme>(amandaTheme);
+  const [editorValue, setEditorValue] = useState(theme.defaultText);
+
   const onCodeMirrorChange = useCallback((value) => {
     setEditorValue(value);
   }, [setEditorValue]);
 
   return (
     <div className="App">
+      <div>
+        Theme:
+        <button type="button" onClick={() => setTheme(dexterTheme)}>
+          Dexter
+        </button>
+        <button type="button" onClick={() => setTheme(amandaTheme)}>
+          Amanda
+        </button>
+      </div>
       <Editor>
         <form>
           <CodeMirrorEditor
-            value={editorValue}
+            value={theme.defaultText}
             onChange={onCodeMirrorChange}
           />
         </form>
       </Editor>
 
-      <Result className="result">
+      <Result className={`result ${theme.css}`}>
         <ReactMarkdown
-          remarkPlugins={[remarkMath]}
-          rehypePlugins={[rehypeMathjax]}
+          remarkPlugins={[remarkMath, remarkGfm]}
+          rehypePlugins={[rehypeMathjax, rehypeSlug]}
         >
           {editorValue}
         </ReactMarkdown>

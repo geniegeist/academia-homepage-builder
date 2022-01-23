@@ -1,0 +1,25 @@
+
+.result.dexter-chua {
+  font-family: 'Lora', serif;
+  padding: calc(1em + 1ex);
+}
+
+.result.dexter-chua h1 {
+  font-size: 2em;
+  font-weight: 500;
+}
+
+.result.dexter-chua h2 {
+  font-family: 'Marcellus SC', serif;
+  color: #a81010;
+  font-size: 1.25em;
+  font-weight: 500;
+}
+
+.result.dexter-chua p {
+  font-size: 0.9em;
+}
+
+.result.dexter-chua math {
+  font-size: 10px;
+}
