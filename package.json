@@ -1,5 +1,6 @@
 {
   "name": "math-cv-builder",
+  "homepage": "https://geniegeist.github.io/academia-homepage-builder/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
