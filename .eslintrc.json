@@ -24,8 +24,6 @@
     "rules": {
         "@typescript-eslint/no-unused-vars": "off",
         "@typescript-eslint/no-use-before-define": "off",
-        "react/require-default-props": "off",
-        "global-require": "off",
-        "import/no-dynamic-require": "off"
+        "react/require-default-props": "off"
     }
 }
