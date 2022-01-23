@@ -71,7 +71,7 @@ Outside of mathematics, I also enjoy rowing, painting, puzzle gaming, running, a
 <head>
   <title>TITLE</title>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="stylesheet.css">
+  <link rel="stylesheet" href="./stylesheet.css">
 </head>
 <body>
 <div class="wrapper">
