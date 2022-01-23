@@ -68,10 +68,11 @@ Outside of mathematics, I also enjoy rowing, painting, puzzle gaming, running, a
   generateHTML: (content: string) => {
     const html = `
 <html>
-<header>
+<head>
+  <title>TITLE</title>
   <meta charset="utf-8" />
   <link rel="stylesheet" href="stylesheet.css">
-</header>
+</head>
 <body>
 <div class="wrapper">
 ${content}
