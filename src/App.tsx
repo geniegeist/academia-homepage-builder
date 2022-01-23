@@ -1,5 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import { NavDropdown } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import ReactMarkdown from 'react-markdown';
 import { unified } from 'unified';
 import remarkMath from 'remark-math';
@@ -27,43 +32,61 @@ function App() {
     setEditorValue(value);
   }, [setEditorValue]);
 
+  const onThemeChange = useCallback((evt) => {
+    const { value } = evt.target;
+    if (value === 'amanda') {
+      setTheme(amandaTheme);
+    } else if (value === 'dexter') {
+      setTheme(dexterTheme);
+    }
+  }, [setTheme]);
+
+  const buildWebsite = useCallback(() => {
+    unified()
+      .use(remarkParse)
+      .use(remarkGfm)
+      .use(remarkMath)
+      .use(remarkRehype)
+      .use(rehypeMathjax)
+      .use(rehypeSlug)
+      .use(rehypeStringify)
+      .process(editorValue)
+      .then(({ value }) => {
+        const zip = new JSZip();
+        zip.file('index.html', theme.generateHTML(value as string));
+        zip.file('stylesheet.css', theme.generateCSS());
+        zip.generateAsync({ type: 'blob' }).then((blob) => {
+          FileSaver.saveAs(blob, 'homepage.zip');
+        });
+      });
+  }, []);
+
   return (
     <div className="App">
-      <div style={{ backgroundColor: '#212121' }}>
-        <span style={{ color: '#cccccc' }}>Theme: </span>
-        <button type="button" onClick={() => setTheme(dexterTheme)}>
-          Dexter
-        </button>
-        <button type="button" onClick={() => setTheme(amandaTheme)}>
-          Amanda
-        </button>
+      <Navbar bg="dark" variant="dark" className="px-3" style={{ height: '64px' }}>
+        <Navbar.Brand>Academia Homepage Builder</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-        <button
-          style={{ right: 0, position: 'fixed' }}
-          type="button"
-          onClick={() => {
-            const file = unified()
-              .use(remarkParse)
-              .use(remarkGfm)
-              .use(remarkMath)
-              .use(remarkRehype)
-              .use(rehypeMathjax)
-              .use(rehypeSlug)
-              .use(rehypeStringify)
-              .process(editorValue)
-              .then(({ value }) => {
-                const zip = new JSZip();
-                zip.file('index.html', theme.generateHTML(value as string));
-                zip.file('stylesheet.css', theme.generateCSS());
-                zip.generateAsync({ type: 'blob' }).then((blob) => {
-                  FileSaver.saveAs(blob, 'homepage.zip');
-                });
-              });
-          }}
-        >
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link href="https://github.com/geniegeist/academia-homepage-builder/wiki/Help" target="_blank">Help</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+
+        <Form className="mx-3">
+          <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
+            <Form.Label style={{ color: 'white', paddingRight: '0.8em', margin: 0 }}>Theme: </Form.Label>
+            <Form.Select onChange={onThemeChange} style={{ maxWidth: '200px' }}>
+              <option value="amanda">Amanda</option>
+              <option selected value="dexter">Dexter</option>
+            </Form.Select>
+          </Form.Group>
+        </Form>
+
+        <Button variant="primary" onClick={buildWebsite}>
           Build website
-        </button>
-      </div>
+        </Button>
+      </Navbar>
       <Editor>
         <form>
           <CodeMirrorEditor

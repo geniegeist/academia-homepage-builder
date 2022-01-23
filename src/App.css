@@ -5,6 +5,8 @@
 
 .cm-line {
   white-space: pre-wrap;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.9em;
 }
 
 .cm-content {

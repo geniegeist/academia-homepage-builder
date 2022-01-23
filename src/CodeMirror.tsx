@@ -22,8 +22,8 @@ function CodeMirrorEditor({ value, onChange = undefined }: Props) {
     container: editor.current,
     width: '100%',
     minWidth: '100%',
-    height: '100vh',
-    minHeight: '100vh',
+    height: 'calc(100vh - 64px)',
+    minHeight: '100%',
     theme: oneDark,
     onChange: codeMirrorOnChange,
     extensions: [
