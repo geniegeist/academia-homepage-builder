@@ -38,6 +38,60 @@ Clicking the title below will lead to a web version of the note, which is an exp
   
 I have a [Privacy Statement](www.google.de) as required by law (maybe).
   `,
+  generateHTML: (content: string) => {
+    const html = `<html>
+<header>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="stylesheet.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com"> 
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Marcellus+SC&display=swap" rel="stylesheet">
+</header>
+<body>
+<div class="wrapper">
+${content}
+</div>
+</body>
+</html>
+  `;
+
+    return html;
+  },
+  generateCSS: () => {
+    const css = `html {
+  display: flex;
+  justify-content: center;
+}
+
+img {
+  width: 100%;
+}
+
+.wrapper {
+  margin-top: 1em;
+  width: 600px;
+  font-family: 'Lora', serif;
+  padding: calc(1em + 1ex);
+}
+
+.wrapper h1 {
+  font-size: 2.2em;
+  font-weight: 500;
+}
+
+.wrapper h2 {
+  font-family: 'Marcellus SC', serif;
+  color: #a81010;
+  font-size: 1.4em;
+  font-weight: 500;
+}
+
+.wrapper p {
+  font-size: 1em;
+}
+    `;
+    return css;
+  },
 };
 
 export default theme;

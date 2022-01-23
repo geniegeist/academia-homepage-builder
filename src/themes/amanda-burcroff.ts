@@ -65,6 +65,83 @@ Outside of mathematics, I also enjoy rowing, painting, puzzle gaming, running, a
 *© 2021 Amanda Burcroff. All rights reserved.*
   
   `,
+  generateHTML: (content: string) => {
+    const html = `
+<html>
+<header>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="stylesheet.css">
+</header>
+<body>
+<div class="wrapper">
+${content}
+</div>
+</body>
+</html>
+    `;
+    return html;
+  },
+  generateCSS: () => {
+    const css = `html {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  width: 100%;
+}
+
+.wrapper {
+  margin-top: 1em;
+  width: 640px;
+  color: #333d41;
+  padding: calc(1em + 1ex);
+}
+
+.wrapper h1, .wrapper h2, .wrapper h4 {
+  text-align: center;
+}
+
+.wrapper h3, .wrapper h5, .wrapper h6 {
+  text-align: left;
+}
+
+.wrapper h1 {
+  font-weight: bold;
+}
+
+.wrapper h4 {
+  color: #3b464b;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 0.1em;
+  line-height: 0.8em;
+}
+
+.wrapper ul li {
+  margin: 0.4em 0;
+}
+
+.wrapper a {
+  border-bottom: 1px solid #91b7c7;
+  text-decoration: none;
+  color: #333d41;
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.wrapper a:hover {
+  color: #91b7c7;
+}
+    `;
+    return css;
+  },
 };
 
 export default theme;

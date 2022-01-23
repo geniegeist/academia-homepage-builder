@@ -3,8 +3,12 @@
   padding: calc(1em + 1ex);
 }
 
-.result.amanda-burcroff h1, .result.amanda-burcroff h2, .result.amanda-burcroff h3, .result.amanda-burcroff h4, .result.amanda-burcroff h5, .result.amanda-burcroff h6 {
+.result.amanda-burcroff h1, .result.amanda-burcroff h2, .result.amanda-burcroff h4 {
   text-align: center;
+}
+
+.result.amanda-burcroff h3, .result.amanda-burcroff h5, .result.amanda-burcroff h6 {
+  text-align: left;
 }
 
 .result.amanda-burcroff h1 {

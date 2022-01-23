@@ -1,10 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ReactMarkdown from 'react-markdown';
+import { unified } from 'unified';
 import remarkMath from 'remark-math';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import rehypeMathjax from 'rehype-mathjax';
+import remarkParse from 'remark-parse/lib';
+import remarkRehype from 'remark-rehype';
+import rehypeStringify from 'rehype-stringify/lib';
+import JSZip from 'jszip';
+import FileSaver from 'file-saver';
 import CodeMirrorEditor from './CodeMirror';
 import type { Theme } from './themes/theme';
 import amandaTheme from './themes/amanda-burcroff';
@@ -14,7 +20,7 @@ import './themes/dexter-chua.css';
 import './themes/amanda-burcroff.css';
 
 function App() {
-  const [theme, setTheme] = useState<Theme>(amandaTheme);
+  const [theme, setTheme] = useState<Theme>(dexterTheme);
   const [editorValue, setEditorValue] = useState(theme.defaultText);
 
   const onCodeMirrorChange = useCallback((value) => {
@@ -23,13 +29,39 @@ function App() {
 
   return (
     <div className="App">
-      <div>
-        Theme:
+      <div style={{ backgroundColor: '#212121' }}>
+        <span style={{ color: '#cccccc' }}>Theme: </span>
         <button type="button" onClick={() => setTheme(dexterTheme)}>
           Dexter
         </button>
         <button type="button" onClick={() => setTheme(amandaTheme)}>
           Amanda
+        </button>
+
+        <button
+          style={{ right: 0, position: 'fixed' }}
+          type="button"
+          onClick={() => {
+            const file = unified()
+              .use(remarkParse)
+              .use(remarkGfm)
+              .use(remarkMath)
+              .use(remarkRehype)
+              .use(rehypeMathjax)
+              .use(rehypeSlug)
+              .use(rehypeStringify)
+              .process(editorValue)
+              .then(({ value }) => {
+                const zip = new JSZip();
+                zip.file('index.html', theme.generateHTML(value as string));
+                zip.file('stylesheet.css', theme.generateCSS());
+                zip.generateAsync({ type: 'blob' }).then((blob) => {
+                  FileSaver.saveAs(blob, 'homepage.zip');
+                });
+              });
+          }}
+        >
+          Build website
         </button>
       </div>
       <Editor>
