@@ -1,8 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { NavDropdown } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import ReactMarkdown from 'react-markdown';
@@ -16,18 +15,20 @@ import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify/lib';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
-import CodeMirrorEditor from './CodeMirror';
+import { CodeMirrorEditor } from './codemirror';
 import type { Theme } from './themes/theme';
 import defaultTheme from './themes/default';
 import amandaTheme from './themes/amanda-burcroff';
 import dexterTheme from './themes/dexter-chua';
 import './App.css';
+import './one-dark.css';
 
 function App() {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
   const [editorValue, setEditorValue] = useState(theme.defaultText);
 
-  const onCodeMirrorChange = useCallback((value) => {
+  const onCodeMirrorChange = useCallback(({ target }) => {
+    const { value }: { value: string } = target;
     setEditorValue(value);
   }, [setEditorValue]);
 
@@ -77,10 +78,10 @@ function App() {
         <Form className="mx-3">
           <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
             <Form.Label style={{ color: 'white', paddingRight: '0.8em', margin: 0 }}>Theme: </Form.Label>
-            <Form.Select onChange={onThemeChange} style={{ maxWidth: '200px' }}>
+            <Form.Select value="default" onChange={onThemeChange} style={{ maxWidth: '200px' }}>
               <option value="amanda">Amanda</option>
               <option value="dexter">Dexter</option>
-              <option selected value="default">Default</option>
+              <option value="default">Default</option>
             </Form.Select>
           </Form.Group>
         </Form>
@@ -89,14 +90,18 @@ function App() {
           Build website
         </Button>
       </Navbar>
-      <Editor>
+      <div className="editor">
         <form>
           <CodeMirrorEditor
-            value={theme.defaultText}
+            mode="markdown"
+            theme="one-dark"
+            value={editorValue}
             onChange={onCodeMirrorChange}
+            lineWrapping
+            lineNumbers
           />
         </form>
-      </Editor>
+      </div>
 
       <Result className={`result ${theme.css}`}>
         <ReactMarkdown
@@ -111,12 +116,11 @@ function App() {
   );
 }
 
-const Editor = styled.div`
-  position: fixed;
-  left: 0;
-  width: 50%;
-  overflow: auto;
-`;
+function fromNow(milliSeconds: number): Date {
+  const date = new Date();
+  date.setMilliseconds(date.getMilliseconds() + milliSeconds);
+  return date;
+}
 
 const Result = styled.div`
   position: fixed;
