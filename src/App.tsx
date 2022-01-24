@@ -18,14 +18,13 @@ import JSZip from 'jszip';
 import FileSaver from 'file-saver';
 import CodeMirrorEditor from './CodeMirror';
 import type { Theme } from './themes/theme';
+import defaultTheme from './themes/default';
 import amandaTheme from './themes/amanda-burcroff';
 import dexterTheme from './themes/dexter-chua';
 import './App.css';
-import './themes/dexter-chua.css';
-import './themes/amanda-burcroff.css';
 
 function App() {
-  const [theme, setTheme] = useState<Theme>(dexterTheme);
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
   const [editorValue, setEditorValue] = useState(theme.defaultText);
 
   const onCodeMirrorChange = useCallback((value) => {
@@ -38,6 +37,8 @@ function App() {
       setTheme(amandaTheme);
     } else if (value === 'dexter') {
       setTheme(dexterTheme);
+    } else if (value === 'default') {
+      setTheme(defaultTheme);
     }
   }, [setTheme]);
 
@@ -78,7 +79,8 @@ function App() {
             <Form.Label style={{ color: 'white', paddingRight: '0.8em', margin: 0 }}>Theme: </Form.Label>
             <Form.Select onChange={onThemeChange} style={{ maxWidth: '200px' }}>
               <option value="amanda">Amanda</option>
-              <option selected value="dexter">Dexter</option>
+              <option value="dexter">Dexter</option>
+              <option selected value="default">Default</option>
             </Form.Select>
           </Form.Group>
         </Form>

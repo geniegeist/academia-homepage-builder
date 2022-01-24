@@ -1,4 +1,5 @@
 import { Theme } from './theme';
+import './amanda-burcroff.css';
 
 const theme: Theme = {
   css: 'amanda-burcroff',
@@ -66,12 +67,12 @@ Outside of mathematics, I also enjoy rowing, painting, puzzle gaming, running, a
   
   `,
   generateHTML: (content: string) => {
-    const html = `
+    const html = `<!DOCTYPE html>
 <html>
 <head>
   <title>TITLE</title>
   <meta charset="utf-8" />
-  <link rel="stylesheet" href="./stylesheet.css">
+  <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
 <div class="wrapper">
