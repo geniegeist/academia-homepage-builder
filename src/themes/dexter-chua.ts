@@ -2,6 +2,7 @@ import { Theme } from './theme';
 import './dexter-chua.css';
 
 const theme: Theme = {
+  name: 'dexter',
   css: 'dexter-chua',
   defaultText: `# Marius Hoffmann
 

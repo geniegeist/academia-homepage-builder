@@ -2,6 +2,7 @@ import { Theme } from './theme';
 import './default.css';
 
 const theme: Theme = {
+  name: 'default',
   css: 'default',
   defaultText: `# Welcome 
 

@@ -71,6 +71,7 @@ function App() {
 
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
+            <Nav.Link href="https://github.com/geniegeist/academia-homepage-builder/wiki/Help" target="_blank">Examples</Nav.Link>
             <Nav.Link href="https://github.com/geniegeist/academia-homepage-builder/wiki/Help" target="_blank">Help</Nav.Link>
           </Nav>
         </Navbar.Collapse>
@@ -78,7 +79,7 @@ function App() {
         <Form className="mx-3">
           <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
             <Form.Label style={{ color: 'white', paddingRight: '0.8em', margin: 0 }}>Theme: </Form.Label>
-            <Form.Select value="default" onChange={onThemeChange} style={{ maxWidth: '200px' }}>
+            <Form.Select value={theme.name} onChange={onThemeChange} style={{ maxWidth: '200px' }}>
               <option value="amanda">Amanda</option>
               <option value="dexter">Dexter</option>
               <option value="default">Default</option>
@@ -90,6 +91,7 @@ function App() {
           Build website
         </Button>
       </Navbar>
+
       <div className="editor">
         <form>
           <CodeMirrorEditor

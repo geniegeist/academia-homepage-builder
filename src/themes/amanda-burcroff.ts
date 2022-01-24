@@ -2,6 +2,7 @@ import { Theme } from './theme';
 import './amanda-burcroff.css';
 
 const theme: Theme = {
+  name: 'amanda',
   css: 'amanda-burcroff',
   defaultText: `# Viet Duc Nguyen
 

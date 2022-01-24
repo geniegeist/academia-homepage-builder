@@ -9,10 +9,29 @@
   font-weight: 500;
 }
 
-.result.dexter-chua h2 {
+.result.dexter-chua h2, .result.dexter-chua h3, .result.dexter-chua h4, .result.dexter-chua h5, .result.dexter-chua h6 {
   color: #a81010;
-  font-size: 1.25em;
   font-weight: 500;
+}
+
+.result.dexter-chua h2 {
+  font-size: 1.7em;
+}
+
+.result.dexter-chua h3 {
+  font-size: 1.5em;
+}
+
+.result.dexter-chua h4 {
+  font-size: 1.3em;
+}
+
+.result.dexter-chua h5 {
+  font-size: 1.2em;
+}
+
+.result.dexter-chua h6 {
+  font-size: 1.1em;
 }
 
 .result.dexter-chua p {
