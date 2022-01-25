@@ -15,7 +15,7 @@ export interface FileRef {
 }
 
 const DIR_KEY = 'files';
-const WELCOME_TEXT = `# Welcome to mathedit
+const WELCOME_TEXT = `# Welcome to ResumeEdit!
 
 ---
 
