@@ -7,7 +7,7 @@ interface Directory {
   lastOpenedFile: FileRef;
 }
 
-interface FileRef {
+export interface FileRef {
   id: string;
   meta: {
     name: string;
@@ -15,50 +15,7 @@ interface FileRef {
 }
 
 const DIR_KEY = 'files';
-
-function initDirectory(): Directory {
-  const id = uuid();
-  const name = 'Welcome';
-  const ref: FileRef = {
-    id,
-    meta: {
-      name,
-    },
-  };
-
-  const file: MarkdownFile = {
-    id,
-    name,
-    theme: 'default',
-    content: WELCOME_TEXT,
-  };
-
-  const initialDir: Directory = {
-    files: [ref],
-    lastOpenedFile: ref,
-  };
-
-  useLocalStorage(id, file);
-
-  return initialDir;
-}
-
-function useDir() {
-  const [directory, setDirectory] = useLocalStorage(DIR_KEY, initDirectory());
-  const loadFile = (ref: FileRef): MarkdownFile | null => {
-    const [file, setFile] = useLocalStorage(ref.id, null);
-    if (file) {
-      return file;
-    }
-
-    return null;
-  };
-  const lastOpenedFile = loadFile(directory.lastOpenedFile);
-
-  return [directory, lastOpenedFile, loadFile] as const;
-}
-
-const WELCOME_TEXT = `# Welcome 
+const WELCOME_TEXT = `# Welcome to mathedit
 
 ---
 
@@ -108,5 +65,53 @@ $$
   \\int^b_a F_x(\\varphi^\\lambda) \\mathrm{d}x
 $$
 `;
+
+if (!window.localStorage.getItem(DIR_KEY)) {
+  window.localStorage.setItem(DIR_KEY, JSON.stringify(initDirectory()));
+}
+
+function initDirectory(): Directory {
+  const id = uuid();
+  const name = 'Welcome';
+  const ref: FileRef = {
+    id,
+    meta: {
+      name,
+    },
+  };
+
+  const file: MarkdownFile = {
+    id,
+    name,
+    theme: 'default',
+    content: WELCOME_TEXT,
+  };
+
+  const initialDir: Directory = {
+    files: [ref],
+    lastOpenedFile: ref,
+  };
+
+  window.localStorage.setItem(id, JSON.stringify(file));
+
+  return initialDir;
+}
+
+function useDir() {
+  const [directory, setDirectory] = useLocalStorage<Directory | null>(DIR_KEY, null);
+  const loadFile = (ref: FileRef): MarkdownFile | null => {
+    const [file, setFile] = useLocalStorage(ref.id, null);
+    if (file) {
+      return file;
+    }
+
+    return null;
+  };
+  let lastOpenedFile: MarkdownFile | null = null;
+  if (directory) {
+    lastOpenedFile = loadFile(directory.lastOpenedFile);
+  }
+  return [directory, lastOpenedFile, loadFile] as const;
+}
 
 export default useDir;

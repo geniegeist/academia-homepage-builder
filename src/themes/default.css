@@ -1,6 +1,6 @@
 .result.default {
   color: #333d41;
-  padding: calc(1em + 1ex);
+  padding: 1em;
 }
 
 .result.default h1, .result.default h2, .result.default h3, .result.default h4, .result.default h5, .result.default h6 {
