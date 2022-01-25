@@ -3,6 +3,11 @@
   height: 100%;
 }
 
+.col {
+  padding: 0;
+  margin: 0;
+}
+
 .editor {
   position: fixed;
   top: 64px;
@@ -22,9 +27,17 @@
 
 .CodeMirror {
   height: 100%;
-  width: 50%;
+  width: 100%;
 }
 
 .result img {
   width: 100%;
+}
+
+.icon-folder {
+  opacity: 0.6;
+}
+
+.icon-folder:hover {
+  opacity: 1.0;
 }
