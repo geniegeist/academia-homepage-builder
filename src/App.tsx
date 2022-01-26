@@ -21,6 +21,7 @@ import FileSaver from 'file-saver';
 import { CodeMirrorEditor } from './codemirror';
 import FileNavigator from './FileNavigator';
 import useDir from './hooks/useDir';
+import useWebsiteBuilder from './hooks/useWebsiteBuilder';
 import type { Theme } from './themes/theme';
 import defaultTheme from './themes/default';
 import amandaTheme from './themes/amanda-burcroff';
@@ -54,24 +55,17 @@ function App() {
     }
   }, [setTheme]);
 
+  const [build] = useWebsiteBuilder();
+
   const buildWebsite = useCallback(() => {
-    unified()
-      .use(remarkParse)
-      .use(remarkGfm)
-      .use(remarkMath)
-      .use(remarkRehype)
-      .use(rehypeMathjax)
-      .use(rehypeSlug)
-      .use(rehypeStringify)
-      .process(editorValue)
-      .then(({ value }) => {
-        const zip = new JSZip();
-        zip.file('index.html', theme.generateHTML(value as string));
-        zip.file('stylesheet.css', theme.generateCSS());
-        zip.generateAsync({ type: 'blob' }).then((blob) => {
-          FileSaver.saveAs(blob, 'homepage.zip');
-        });
+    build(editorValue, (html) => {
+      const zip = new JSZip();
+      zip.file('index.html', theme.generateHTML(html));
+      zip.file('stylesheet.css', theme.generateCSS());
+      zip.generateAsync({ type: 'blob' }).then((blob) => {
+        FileSaver.saveAs(blob, 'homepage.zip');
       });
+    });
   }, [theme, editorValue]);
 
   return (
