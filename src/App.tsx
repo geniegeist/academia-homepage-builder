@@ -18,7 +18,7 @@ import CodeMirrorEditor from './CodeMirror';
 import FileNavigator from './FileNavigator';
 import useDir from './hooks/useDir';
 import useWebsiteBuilder from './hooks/useWebsiteBuilder';
-import type { Theme } from './themes/theme';
+import { injectCSS, Theme, CSSConfig } from './themes/theme';
 import defaultTheme from './themes/default';
 import amandaTheme from './themes/amanda-burcroff';
 import dexterTheme from './themes/dexter-chua';
@@ -30,7 +30,7 @@ const NAVBAR_HEIGHT = '64px';
 
 function App() {
   const [directory, lastOpenedFile, loadFile] = useDir();
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [theme, setTheme] = useState<Theme>(dexterTheme);
   const [editorValue, setEditorValue] = useState(lastOpenedFile
     ? lastOpenedFile.content : theme.defaultText);
   const [showLeftMenu, setShowLeftMenu] = useState(false);
@@ -113,22 +113,33 @@ function App() {
                 />
               </form>
             </Col>
-            <Col sm className="overflow-scroll" style={{ height: `calc(100vh - ${NAVBAR_HEIGHT})` }}>
-              <div className={`result ${theme.css} overflow-scroll`}>
+            <Result sm className="overflow-scroll" $cssConfig={theme.css()}>
+              <ReactMarkdownWrapper>
                 <ReactMarkdown
                   remarkPlugins={[remarkMath, remarkGfm]}
                   rehypePlugins={[rehypeMathjax, rehypeSlug]}
                 >
                   {editorValue}
                 </ReactMarkdown>
-              </div>
-              <div style={{ height: '3em' }} />
-            </Col>
+              </ReactMarkdownWrapper>
+            </Result>
           </Row>
         </Container>
       </Col>
     </Row>
   );
 }
+
+const Result = styled(Col)<{ $cssConfig: CSSConfig[] }>`
+  height: calc(100vh - 64px);
+  img {
+    width: 100%;
+  }
+  ${(props) => injectCSS(props.$cssConfig)}
+`;
+
+const ReactMarkdownWrapper = styled.div`
+  padding: calc(1em + 1ex);
+`;
 
 export default App;

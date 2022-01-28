@@ -3,7 +3,6 @@ import './amanda-burcroff.css';
 
 const theme: Theme = {
   name: 'amanda',
-  css: 'amanda-burcroff',
   defaultText: `# Viet Duc Nguyen
 
 #### Mathematics PhD Student
@@ -67,6 +66,7 @@ Outside of mathematics, I also enjoy rowing, painting, puzzle gaming, running, a
 *© 2021 Amanda Burcroff. All rights reserved.*
   
   `,
+  css: () => [],
   generateHTML: (content: string) => {
     const html = `<!DOCTYPE html>
 <html>

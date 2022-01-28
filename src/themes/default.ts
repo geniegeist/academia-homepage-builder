@@ -3,7 +3,6 @@ import './default.css';
 
 const theme: Theme = {
   name: 'default',
-  css: 'default',
   defaultText: `# Welcome 
 
 ---
@@ -54,6 +53,7 @@ $$
   \\int^b_a F_x(\\varphi^\\lambda) \\mathrm{d}x
 $$
 `,
+  css: () => [],
   generateHTML: (content: string) => {
     const html = `<!DOCTYPE html>
 <html>
