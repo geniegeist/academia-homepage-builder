@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useRef, useState,
+} from 'react';
 import styled from 'styled-components';
 import { Container } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
@@ -24,20 +26,24 @@ import amandaTheme from './themes/amanda-burcroff';
 import dexterTheme from './themes/dexter-chua';
 import './App.css';
 import './one-dark.css';
-import FOLDER_ICON from './assets/icons/folder.png';
+import FOLDER_ICON from './assets/icons/folder.svg';
 
 const NAVBAR_HEIGHT = '64px';
 
 function App() {
-  const [directory, lastOpenedFile, loadFile] = useDir();
-  const [theme, setTheme] = useState<Theme>(dexterTheme);
-  const [editorValue, setEditorValue] = useState(lastOpenedFile
-    ? lastOpenedFile.content : theme.defaultText);
+  const [directory, activeFile, loadFile, saveFile, createFolder] = useDir();
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [editorValue, setEditorValue] = useState(activeFile
+    ? activeFile.content : theme.defaultText);
   const [showLeftMenu, setShowLeftMenu] = useState(false);
+  const [fileChanged, setFileChanged] = useState(false);
 
   const onCodeMirrorChange = useCallback(({ target }) => {
     const { value }: { value: string } = target;
-    setEditorValue(value);
+    if (value !== editorValue) {
+      setEditorValue(value);
+      setFileChanged(true);
+    }
   }, [setEditorValue]);
 
   const onThemeChange = useCallback((evt) => {
@@ -54,6 +60,10 @@ function App() {
   const [build] = useWebsiteBuilder();
 
   const buildWebsite = useCallback(() => {
+    if (!activeFile) {
+      return;
+    }
+    saveFile(activeFile!.id, editorValue);
     build(editorValue, (html) => {
       const zip = new JSZip();
       zip.file('index.html', theme.generateHTML(html));
@@ -62,7 +72,30 @@ function App() {
         FileSaver.saveAs(blob, 'homepage.zip');
       });
     });
-  }, [theme, editorValue]);
+  }, [theme, editorValue, activeFile]);
+
+  const intervalRef = useRef<NodeJS.Timer>();
+
+  useEffect(() => {
+    if (!intervalRef.current && fileChanged) {
+      intervalRef.current = setInterval(() => {
+        console.log('Save file');
+        if (activeFile) {
+          saveFile(activeFile?.id, editorValue);
+        }
+        setFileChanged(false);
+      }, 5000);
+    } else if (intervalRef.current && !fileChanged) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = undefined;
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [fileChanged]);
 
   return (
     <Row className="App gx-0">
@@ -70,7 +103,8 @@ function App() {
         <Col xs={12} sm={3} style={{ height: '100vh' }}>
           <FileNavigator
             files={directory ? directory.files : []}
-            selectedFile={lastOpenedFile?.id}
+            selectedFile={activeFile?.id}
+            onCreateFolder={() => createFolder('Folder')}
           />
         </Col>
       )}

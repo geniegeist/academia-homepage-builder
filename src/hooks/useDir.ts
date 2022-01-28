@@ -4,17 +4,23 @@ import useLocalStorage from './useLocalStorage';
 
 interface Directory {
   files: FileRef[];
-  lastOpenedFile: FileRef;
+  activeFile?: FileRef;
 }
 
 export interface FileRef {
   id: string;
   meta: {
     name: string;
-  }
+  };
+  type: 'file' | 'folder';
 }
 
-const DIR_KEY = 'files';
+export interface Folder {
+  files: FileRef[];
+  type: 'folder';
+}
+
+const DIR_KEY = 'DIRECTORY';
 const WELCOME_TEXT = `# Welcome to ResumeEdit!
 
 ---
@@ -78,6 +84,7 @@ function initDirectory(): Directory {
     meta: {
       name,
     },
+    type: 'file',
   };
 
   const file: MarkdownFile = {
@@ -85,11 +92,12 @@ function initDirectory(): Directory {
     name,
     theme: 'default',
     content: WELCOME_TEXT,
+    type: 'markdown',
   };
 
   const initialDir: Directory = {
     files: [ref],
-    lastOpenedFile: ref,
+    activeFile: ref,
   };
 
   window.localStorage.setItem(id, JSON.stringify(file));
@@ -99,19 +107,68 @@ function initDirectory(): Directory {
 
 function useDir() {
   const [directory, setDirectory] = useLocalStorage<Directory | null>(DIR_KEY, null);
-  const loadFile = (ref: FileRef): MarkdownFile | null => {
-    const [file, setFile] = useLocalStorage(ref.id, null);
+
+  const loadFile = (fileId: string): MarkdownFile | null => {
+    const [file, setFile] = useLocalStorage(fileId, null);
     if (file) {
       return file;
     }
 
     return null;
   };
-  let lastOpenedFile: MarkdownFile | null = null;
-  if (directory) {
-    lastOpenedFile = loadFile(directory.lastOpenedFile);
+
+  const saveFile = (fileId: string, content: string) => {
+    if (!directory) {
+      console.log('Cannot save file because no directory exists');
+      return;
+    }
+
+    const item = window.localStorage.getItem(fileId);
+    if (!item) {
+      return;
+    }
+    const referenceFile = JSON.parse(item) as MarkdownFile;
+
+    const file: MarkdownFile = {
+      ...referenceFile!,
+      content,
+    };
+
+    window.localStorage.setItem(fileId, JSON.stringify(file));
+  };
+
+  const createFolder = (name: string) => {
+    if (!directory) {
+      console.log('Cannot create folder since directory does not exist');
+      return;
+    }
+
+    const id = uuid();
+    const folder: Folder = {
+      files: [],
+      type: 'folder',
+    };
+
+    setDirectory({
+      files: [...directory!.files, {
+        id,
+        meta: {
+          name,
+        },
+        type: 'folder',
+      }],
+      activeFile: directory!.activeFile,
+    });
+
+    window.localStorage.setItem(id, JSON.stringify(folder));
+  };
+
+  let activeFile: MarkdownFile | null = null;
+  if (directory?.activeFile) {
+    activeFile = loadFile(directory.activeFile.id);
   }
-  return [directory, lastOpenedFile, loadFile] as const;
+
+  return [directory, activeFile, loadFile, saveFile, createFolder] as const;
 }
 
 export default useDir;
