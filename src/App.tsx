@@ -14,7 +14,7 @@ import rehypeSlug from 'rehype-slug';
 import rehypeMathjax from 'rehype-mathjax';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
-import CodeMirrorEditor from './codemirror';
+import CodeMirrorEditor from './CodeMirror';
 import FileNavigator from './FileNavigator';
 import useDir from './hooks/useDir';
 import useWebsiteBuilder from './hooks/useWebsiteBuilder';

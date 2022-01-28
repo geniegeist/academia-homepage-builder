@@ -1,6 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 
-const CodeMirror = window.CodeMirror
+declare global {
+  interface Window {
+    CodeMirror: any;
+  }
+}
+
+const { CodeMirror } = window;
 
 // Adapted from:
 // https://github.com/facebook/react/blob/master/docs/_js/live_editor.js#L16
@@ -8,15 +14,20 @@ const CodeMirror = window.CodeMirror
 // also used as an example:
 // https://github.com/facebook/react/blob/master/src/browser/ui/dom/components/ReactDOMInput.js
 
-const CodeMirrorEditor = ({ value, onChange, config }) => {
-  const editorRef = useRef(null);
-  const editor = useRef(null);
-  
+interface Props {
+  value: string;
+  onChange: (arg: { target: { value: string } }) => void;
+  config: any;
+}
+
+function CodeMirrorEditor({ value, onChange, config }: Props) {
+  const editorRef = useRef<HTMLTextAreaElement>(null);
+  const editor = useRef<any>();
   const handleChange = () => {
-    const value = editor.current.getValue()
+    const editorValue = editor.current.getValue();
 
     if (onChange) {
-      onChange({target: {value}});
+      onChange({ target: { value: editorValue } });
     }
   };
 
@@ -28,10 +39,10 @@ const CodeMirrorEditor = ({ value, onChange, config }) => {
   return (
     <textarea
       ref={editorRef}
-      value={value}
       onChange={onChange}
+      value={value}
     />
   );
-};
+}
 
 export default CodeMirrorEditor;
