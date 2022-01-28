@@ -8,17 +8,13 @@ import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import ReactMarkdown from 'react-markdown';
-import { unified } from 'unified';
 import remarkMath from 'remark-math';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import rehypeMathjax from 'rehype-mathjax';
-import remarkParse from 'remark-parse/lib';
-import remarkRehype from 'remark-rehype';
-import rehypeStringify from 'rehype-stringify/lib';
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
-import { CodeMirrorEditor } from './codemirror';
+import CodeMirrorEditor from './codemirror';
 import FileNavigator from './FileNavigator';
 import useDir from './hooks/useDir';
 import useWebsiteBuilder from './hooks/useWebsiteBuilder';
@@ -103,15 +99,17 @@ function App() {
         </Navbar>
         <Container fluid>
           <Row className="gx-0 overflow-scroll">
-            <Col sm className="overflow-scroll" style={{ height: 'calc(100vh - 64px)' }}>
+            <Col sm className="overflow-scroll" style={{ height: `calc(100vh - ${NAVBAR_HEIGHT})` }}>
               <form>
                 <CodeMirrorEditor
-                  mode="markdown"
-                  theme="one-dark"
                   value={editorValue}
                   onChange={onCodeMirrorChange}
-                  lineWrapping
-                  lineNumbers
+                  config={{
+                    mode: 'markdown',
+                    theme: 'one-dark',
+                    lineWrapping: true,
+                    lineNumbers: true,
+                  }}
                 />
               </form>
             </Col>
@@ -132,21 +130,5 @@ function App() {
     </Row>
   );
 }
-
-function fromNow(milliSeconds: number): Date {
-  const date = new Date();
-  date.setMilliseconds(date.getMilliseconds() + milliSeconds);
-  return date;
-}
-
-const Result = styled.div`
-  position: fixed;
-  right: 0;
-  left: 50%;
-  overflow: auto;
-  background-color: white;
-  height: 100%;
-  margin-bottom: 3em;
-`;
 
 export default App;
