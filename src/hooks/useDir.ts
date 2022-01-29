@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 import MarkdownFile from '../models/MarkdownFile';
 import useLocalStorage from './useLocalStorage';
+import { defaultText as amandaText } from '../themes/amanda-burcroff';
+import { defaultText as dexterText } from '../themes/dexter-chua';
 
 interface Directory {
   files: FileRef[];
-  activeFile?: FileRef;
+  lastOpenedFile?: FileRef;
 }
 
 export interface FileRef {
@@ -26,7 +28,7 @@ const WELCOME_TEXT = `# Welcome to ResumeEdit!
 
 ---
 
-Hi! I’m a Markdown file and I will help you to create your **personal homepage** in *under two minutes*. If you want to learn more about it, you can read me and edit me. Once you have finished with me, you can download your homepage as a HTML file and upload it to a server of your choice.
+Hi! I’m a Markdown file and I will help you to create your **resume homepage** in *under two minutes*. If you want to learn more about it, you can read me and edit me. Once you have finished with me, you can download your homepage as a HTML file and upload it to a server of your choice.
 
 ## What is Markdown?
 
@@ -96,38 +98,59 @@ function initDirectory(): Directory {
     type: 'markdown',
   };
 
+  const amandaId = uuid();
+  const amanda: MarkdownFile = {
+    id: amandaId,
+    name: 'Amanda Example',
+    theme: 'amanda',
+    content: amandaText,
+    type: 'markdown',
+  };
+  const amandaRef: FileRef = {
+    id: amanda.id, meta: { name: amanda.name }, type: 'file',
+  };
+
+  const dexterId = uuid();
+  const dexter: MarkdownFile = {
+    id: dexterId,
+    name: 'Dexter Example',
+    theme: 'dexter',
+    content: dexterText,
+    type: 'markdown',
+  };
+  const dexterRef: FileRef = {
+    id: dexter.id, meta: { name: dexter.name }, type: 'file',
+  };
+
   const initialDir: Directory = {
-    files: [ref],
-    activeFile: ref,
+    files: [ref, amandaRef, dexterRef],
+    lastOpenedFile: ref,
   };
 
   window.localStorage.setItem(id, JSON.stringify(file));
+  window.localStorage.setItem(amandaId, JSON.stringify(amanda));
+  window.localStorage.setItem(dexterId, JSON.stringify(dexter));
 
   return initialDir;
 }
 
-function useDir() {
-  const [directory, setDirectory] = useLocalStorage<Directory | null>(DIR_KEY, null);
-
-  const loadFile = (fileId: string): MarkdownFile | undefined => {
-    const item = window.localStorage.getItem(fileId);
-    if (!item) {
-      return undefined;
-    }
-    const file = JSON.parse(item) as (MarkdownFile | undefined);
-    if (file) {
-      return file;
-    }
-
+export function loadFile(fileId: string): MarkdownFile | undefined {
+  const item = window.localStorage.getItem(fileId);
+  if (!item) {
     return undefined;
-  };
+  }
+  const file = JSON.parse(item) as (MarkdownFile | undefined);
+  if (file) {
+    return file;
+  }
 
-  const saveFile = (fileId: string, content: string) => {
-    if (!directory) {
-      console.log('Cannot save file because no directory exists');
-      return;
-    }
+  return undefined;
+}
 
+function useDir() {
+  const [directory, setDirectory] = useLocalStorage<Directory>(DIR_KEY);
+
+  const saveFile = useCallback((fileId: string, content: string) => {
     const item = window.localStorage.getItem(fileId);
     if (!item) {
       return;
@@ -140,14 +163,9 @@ function useDir() {
     };
 
     window.localStorage.setItem(fileId, JSON.stringify(file));
-  };
+  }, [window]);
 
-  const createFile = (name: string) => {
-    if (!directory) {
-      console.log('Cannot create file since directory does not exist');
-      return;
-    }
-
+  const createFile = useCallback((name: string) => {
     const id = uuid();
     const file: MarkdownFile = {
       id, name, content: '# Hello World', theme: 'default', type: 'markdown',
@@ -161,16 +179,11 @@ function useDir() {
     };
     setDirectory({
       files: [...directory.files, fileRef],
-      activeFile: fileRef,
+      lastOpenedFile: fileRef,
     });
-  };
+  }, [uuid, window, setDirectory, directory]);
 
-  const createFolder = (name: string) => {
-    if (!directory) {
-      console.log('Cannot create folder since directory does not exist');
-      return;
-    }
-
+  const createFolder = useCallback((name: string) => {
     const id = uuid();
     const folder: Folder = {
       files: [],
@@ -178,24 +191,20 @@ function useDir() {
     };
 
     setDirectory({
-      files: [...directory!.files, {
+      files: [...directory.files, {
         id,
         meta: {
           name,
         },
         type: 'folder',
       }],
-      activeFile: directory!.activeFile,
+      lastOpenedFile: directory.lastOpenedFile,
     });
 
     window.localStorage.setItem(id, JSON.stringify(folder));
-  };
+  }, [uuid, setDirectory, window, directory]);
 
-  const setActiveFile = (fileId: string) => {
-    if (!directory) {
-      return;
-    }
-
+  const setLastOpenedFile = useCallback((fileId: string) => {
     const fileRef = directory.files.find((s) => s.id === fileId);
     if (!fileRef) {
       return;
@@ -203,12 +212,12 @@ function useDir() {
 
     setDirectory({
       files: directory.files,
-      activeFile: fileRef,
+      lastOpenedFile: fileRef,
     });
-  };
+  }, [directory, setDirectory]);
 
   return {
-    directory, setActiveFile, loadFile, saveFile, createFile, createFolder,
+    directory, setLastOpenedFile, saveFile, createFile, createFolder,
   } as const;
 }
 

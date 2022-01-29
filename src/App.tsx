@@ -20,107 +20,108 @@ import CodeMirrorEditor from './CodeMirror';
 import FileNavigator from './FileNavigator';
 import useDir from './hooks/useDir';
 import useWebsiteBuilder from './hooks/useWebsiteBuilder';
-import { injectCSS, Theme, CSSConfig } from './themes/theme';
-import defaultTheme from './themes/default';
-import amandaTheme from './themes/amanda-burcroff';
-import dexterTheme from './themes/dexter-chua';
+import useTheme from './hooks/useTheme';
+import useActiveFile from './hooks/useActiveFile';
+import { CSSConfig, injectCSS } from './themes/theme';
 import './App.css';
 import './one-dark.css';
 import FOLDER_ICON from './assets/icons/folder.svg';
 import SAVE_ICON from './assets/icons/save-file.svg';
-import MarkdownFile from './models/MarkdownFile';
 
-const NAVBAR_HEIGHT = '64px';
+const NAVBAR_HEIGHT = '50px';
 
 function App() {
   const {
-    directory, loadFile, saveFile, createFile, createFolder, setActiveFile: updateActiveFileOfDir,
+    directory, saveFile, createFile, createFolder, setLastOpenedFile,
   } = useDir();
-
-  const [activeFile, setActiveFile] = useState<MarkdownFile | undefined>();
-  if (directory && directory.activeFile && (directory.activeFile.id !== activeFile?.id)) {
-    setActiveFile(loadFile(directory.activeFile.id));
-  }
-
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
-  const [editorValue, setEditorValue] = useState(activeFile
-    ? activeFile.content : theme.defaultText);
-
+  const [activeFileId, setActiveFileId, getActiveFile] = useActiveFile(directory.lastOpenedFile?.id);
+  const [theme, setTheme] = useTheme(getActiveFile()?.theme);
+  const [editorValue, setEditorValue] = useState(getActiveFile()?.content ?? '# Hello World');
+  const justOpenedFile = useRef(false);
+  // observe when active file changes
+  // load content and set theme of the
+  // new active file
   useEffect(() => {
+    const activeFile = getActiveFile();
     if (activeFile) {
-      setEditorValue(activeFile?.content);
+      setEditorValue(activeFile.content);
+      setTheme(activeFile.theme);
     }
-  }, [activeFile, setEditorValue]);
+  }, [getActiveFile, setTheme, setEditorValue]);
 
-  const [showLeftMenu, setShowLeftMenu] = useState(false);
   const [fileChanged, setFileChanged] = useState(false);
-
-  const onCodeMirrorChange = useCallback(({ target }) => {
-    const { value }: { value: string } = target;
-    if (value !== editorValue) {
-      setEditorValue(value);
-      if (!fileChanged && directory && directory.activeFile && loadFile(directory.activeFile.id)?.content !== value) {
-        setFileChanged(true);
-      }
-    }
-  }, [setEditorValue]);
-
-  const onThemeChange = useCallback((evt) => {
-    const { value } = evt.target;
-    if (value === 'amanda') {
-      setTheme(amandaTheme);
-    } else if (value === 'dexter') {
-      setTheme(dexterTheme);
-    } else if (value === 'default') {
-      setTheme(defaultTheme);
-    }
-  }, [setTheme]);
-
+  const [showLeftMenu, setShowLeftMenu] = useState(false);
   const [build] = useWebsiteBuilder();
 
-  const buildWebsite = useCallback(() => {
+  // Callbacks
+
+  const onCodeMirrorChange = ({ target }: any) => {
+    const { value }: { value: string } = target;
+    setEditorValue(value);
+    if (justOpenedFile.current) {
+      // this case happens when user opens another file
+      // the editor will report this change
+      // but we will ignore this
+      justOpenedFile.current = false;
+    } else {
+      setFileChanged(true);
+    }
+  };
+
+  const onThemeChange = (evt: any) => {
+    const { value }: { value: string } = evt.target;
+    setTheme(value);
+  };
+
+  const buildWebsite = () => {
+    const activeFile = getActiveFile();
     if (!activeFile) {
       return;
     }
-    saveFile(activeFile!.id, editorValue);
+    saveFile(activeFile.id, editorValue);
     build(editorValue, (html) => {
       const zip = new JSZip();
       zip.file('index.html', theme.generateHTML(html));
       zip.file('stylesheet.css', theme.generateCSS());
+      zip.file('sourcecode.md', editorValue);
       zip.generateAsync({ type: 'blob' }).then((blob) => {
         FileSaver.saveAs(blob, 'homepage.zip');
       });
     });
-  }, [theme, editorValue, activeFile]);
+  };
 
-  const saveFileCallback = useCallback((evt) => {
+  const saveFileCallback = (evt: any) => {
+    const activeFile = getActiveFile();
     if (activeFile) {
-      saveFile(activeFile?.id, editorValue);
+      saveFile(activeFile.id, editorValue);
       setFileChanged(false);
     }
-  }, [activeFile, editorValue, setFileChanged]);
+  };
 
-  const onFileClick = useCallback((fileId) => {
-    if (directory) {
-      updateActiveFileOfDir(fileId);
-      setActiveFile(loadFile(fileId));
+  const onFileClick = (fileId: string) => {
+    if (activeFileId) {
+      saveFile(activeFileId, editorValue);
+      setFileChanged(false);
     }
-  }, [directory, setActiveFile, updateActiveFileOfDir, loadFile]);
+    justOpenedFile.current = true;
+    setLastOpenedFile(fileId);
+    setActiveFileId(fileId);
+  };
 
   return (
     <Row className="App gx-0">
       {showLeftMenu && (
-        <Col xs={12} sm={3} style={{ height: '100vh' }}>
+        <Col xs={12} sm={3} md={2} style={{ height: '100vh' }}>
           <FileNavigator
-            files={directory ? directory.files : []}
-            selectedFile={activeFile?.id}
+            files={directory.files}
+            selectedFile={getActiveFile()?.id}
             onFileClick={onFileClick}
             onCreateFile={(name) => createFile(name)}
             onCreateFolder={(name) => createFolder(name)}
           />
         </Col>
       )}
-      <Col sm={showLeftMenu ? 9 : 12}>
+      <Col sm={showLeftMenu ? 9 : 12} md={showLeftMenu ? 10 : 12}>
         <Navbar bg="dark" variant="dark" className="px-1" style={{ height: NAVBAR_HEIGHT }}>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
@@ -163,7 +164,7 @@ function App() {
                 />
               </form>
             </Col>
-            <Result sm className="overflow-scroll" $cssConfig={theme.css()}>
+            <Result sm className="overflow-scroll d-flex justify-content-center" $cssConfig={theme.css()}>
               <ReactMarkdownWrapper>
                 <ReactMarkdown
                   remarkPlugins={[remarkMath, remarkGfm]}
@@ -171,6 +172,7 @@ function App() {
                 >
                   {editorValue}
                 </ReactMarkdown>
+                <div style={{ height: '2em' }} />
               </ReactMarkdownWrapper>
             </Result>
           </Row>
@@ -180,7 +182,7 @@ function App() {
   );
 }
 
-const Result = styled(Col)<{ $cssConfig: CSSConfig[] }>`
+const Result = styled(Col) <{ $cssConfig: CSSConfig[] }>`
   height: calc(100vh - 64px);
   img {
     width: 100%;
@@ -190,6 +192,7 @@ const Result = styled(Col)<{ $cssConfig: CSSConfig[] }>`
 
 const ReactMarkdownWrapper = styled.div`
   padding: calc(1em + 1ex);
+  max-width: 640px;
 `;
 
 export default App;
