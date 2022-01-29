@@ -37,3 +37,11 @@
 .icon-folder:hover {
   opacity: 1.0;
 }
+
+.icon-save {
+  opacity: 0.6;
+}
+
+.icon-save:hover {
+  opacity: 1.0;
+}

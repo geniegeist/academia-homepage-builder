@@ -27,6 +27,7 @@ import dexterTheme from './themes/dexter-chua';
 import './App.css';
 import './one-dark.css';
 import FOLDER_ICON from './assets/icons/folder.svg';
+import SAVE_ICON from './assets/icons/save-file.svg';
 
 const NAVBAR_HEIGHT = '64px';
 
@@ -74,28 +75,12 @@ function App() {
     });
   }, [theme, editorValue, activeFile]);
 
-  const intervalRef = useRef<NodeJS.Timer>();
-
-  useEffect(() => {
-    if (!intervalRef.current && fileChanged) {
-      intervalRef.current = setInterval(() => {
-        console.log('Save file');
-        if (activeFile) {
-          saveFile(activeFile?.id, editorValue);
-        }
-        setFileChanged(false);
-      }, 5000);
-    } else if (intervalRef.current && !fileChanged) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = undefined;
+  const saveFileCallback = useCallback((evt) => {
+    if (activeFile) {
+      saveFile(activeFile?.id, editorValue);
+      setFileChanged(false);
     }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [fileChanged]);
+  }, [activeFile, editorValue, setFileChanged]);
 
   return (
     <Row className="App gx-0">
@@ -113,6 +98,10 @@ function App() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link onClick={() => setShowLeftMenu(!showLeftMenu)}><img className="icon-folder" alt="folder icon" width="24px" src={FOLDER_ICON} /></Nav.Link>
+              <Nav.Link onClick={saveFileCallback}>
+                <img className="icon-save" alt="folder icon" width="22px" src={SAVE_ICON} />
+                {fileChanged && <span className="px-2">Unsaved changes</span>}
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
 
@@ -127,7 +116,7 @@ function App() {
             </Form.Group>
           </Form>
 
-          <Button variant="primary" onClick={buildWebsite} size="sm">
+          <Button variant="primary" onClick={buildWebsite} size="sm" className="mx-2">
             Build website
           </Button>
         </Navbar>
