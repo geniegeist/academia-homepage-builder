@@ -59,7 +59,9 @@ function App() {
     const { value }: { value: string } = target;
     if (value !== editorValue) {
       setEditorValue(value);
-      setFileChanged(true);
+      if (!fileChanged && directory && directory.activeFile && loadFile(directory.activeFile.id)?.content !== value) {
+        setFileChanged(true);
+      }
     }
   }, [setEditorValue]);
 
