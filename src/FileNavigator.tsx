@@ -56,7 +56,7 @@ const Wrapper = styled.div`
 const TopNavbar = styled.div`
   width: 100%;
   background-color: rgba(0,0,0,0.1);
-  height: 64px;
+  height: 50px;
   display: flex;
   align-items: center;
   padding-left: 0.2em;

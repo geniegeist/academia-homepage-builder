@@ -65,7 +65,7 @@ function cssConfig(): CSSConfig[] {
   }];
 }
 
-const defaultText = `# Marius Hoffmann
+export const defaultText = `# Marius Hoffmann
 
 ![](https://images.unsplash.com/photo-1502101872923-d48509bff386?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1032&q=80)
   
@@ -140,8 +140,6 @@ function generateCSS(): string {
   }`)}
 
   `;
-
-  console.log(css);
 
   return css;
 }
