@@ -1,14 +1,15 @@
 {
   "files": {
-    "main.css": "/resumeedit/static/css/main.857d6079.css",
-    "main.js": "/resumeedit/static/js/main.966299e1.js",
+    "main.css": "/resumeedit/static/css/main.7e9e7cd3.css",
+    "main.js": "/resumeedit/static/js/main.a45e2176.js",
     "index.html": "/resumeedit/index.html",
+    "static/media/save-file.svg": "/resumeedit/static/media/save-file.8457e355ffcb9a437a3688fc002f579d.svg",
     "static/media/folder.svg": "/resumeedit/static/media/folder.b18e97af252d0360b5f94311d1d6e040.svg",
-    "main.857d6079.css.map": "/resumeedit/static/css/main.857d6079.css.map",
-    "main.966299e1.js.map": "/resumeedit/static/js/main.966299e1.js.map"
+    "main.7e9e7cd3.css.map": "/resumeedit/static/css/main.7e9e7cd3.css.map",
+    "main.a45e2176.js.map": "/resumeedit/static/js/main.a45e2176.js.map"
   },
   "entrypoints": [
-    "static/css/main.857d6079.css",
-    "static/js/main.966299e1.js"
+    "static/css/main.7e9e7cd3.css",
+    "static/js/main.a45e2176.js"
   ]
 }
