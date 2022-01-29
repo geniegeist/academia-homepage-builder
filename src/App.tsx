@@ -27,14 +27,31 @@ import dexterTheme from './themes/dexter-chua';
 import './App.css';
 import './one-dark.css';
 import FOLDER_ICON from './assets/icons/folder.svg';
+import SAVE_ICON from './assets/icons/save-file.svg';
+import MarkdownFile from './models/MarkdownFile';
 
 const NAVBAR_HEIGHT = '64px';
 
 function App() {
-  const [directory, activeFile, loadFile, saveFile, createFolder] = useDir();
+  const {
+    directory, loadFile, saveFile, createFile, createFolder, setActiveFile: updateActiveFileOfDir,
+  } = useDir();
+
+  const [activeFile, setActiveFile] = useState<MarkdownFile | undefined>();
+  if (directory && directory.activeFile && (directory.activeFile.id !== activeFile?.id)) {
+    setActiveFile(loadFile(directory.activeFile.id));
+  }
+
   const [theme, setTheme] = useState<Theme>(defaultTheme);
   const [editorValue, setEditorValue] = useState(activeFile
     ? activeFile.content : theme.defaultText);
+
+  useEffect(() => {
+    if (activeFile) {
+      setEditorValue(activeFile?.content);
+    }
+  }, [activeFile, setEditorValue]);
+
   const [showLeftMenu, setShowLeftMenu] = useState(false);
   const [fileChanged, setFileChanged] = useState(false);
 
@@ -74,28 +91,19 @@ function App() {
     });
   }, [theme, editorValue, activeFile]);
 
-  const intervalRef = useRef<NodeJS.Timer>();
-
-  useEffect(() => {
-    if (!intervalRef.current && fileChanged) {
-      intervalRef.current = setInterval(() => {
-        console.log('Save file');
-        if (activeFile) {
-          saveFile(activeFile?.id, editorValue);
-        }
-        setFileChanged(false);
-      }, 5000);
-    } else if (intervalRef.current && !fileChanged) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = undefined;
+  const saveFileCallback = useCallback((evt) => {
+    if (activeFile) {
+      saveFile(activeFile?.id, editorValue);
+      setFileChanged(false);
     }
+  }, [activeFile, editorValue, setFileChanged]);
 
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [fileChanged]);
+  const onFileClick = useCallback((fileId) => {
+    if (directory) {
+      updateActiveFileOfDir(fileId);
+      setActiveFile(loadFile(fileId));
+    }
+  }, [directory, setActiveFile, updateActiveFileOfDir, loadFile]);
 
   return (
     <Row className="App gx-0">
@@ -104,7 +112,9 @@ function App() {
           <FileNavigator
             files={directory ? directory.files : []}
             selectedFile={activeFile?.id}
-            onCreateFolder={() => createFolder('Folder')}
+            onFileClick={onFileClick}
+            onCreateFile={(name) => createFile(name)}
+            onCreateFolder={(name) => createFolder(name)}
           />
         </Col>
       )}
@@ -113,6 +123,10 @@ function App() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link onClick={() => setShowLeftMenu(!showLeftMenu)}><img className="icon-folder" alt="folder icon" width="24px" src={FOLDER_ICON} /></Nav.Link>
+              <Nav.Link onClick={saveFileCallback}>
+                <img className="icon-save" alt="folder icon" width="22px" src={SAVE_ICON} />
+                {fileChanged && <span className="px-2">Unsaved changes</span>}
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
 
@@ -127,7 +141,7 @@ function App() {
             </Form.Group>
           </Form>
 
-          <Button variant="primary" onClick={buildWebsite} size="sm">
+          <Button variant="primary" onClick={buildWebsite} size="sm" className="mx-2">
             Build website
           </Button>
         </Navbar>

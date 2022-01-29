@@ -9,6 +9,9 @@ declare global {
 const { CodeMirror } = window;
 
 // Adapted from:
+// https://github.com/remarkjs/react-markdown/blob/website/src/codemirror.js
+
+// Adapted from:
 // https://github.com/facebook/react/blob/master/docs/_js/live_editor.js#L16
 
 // also used as an example:
@@ -35,6 +38,16 @@ function CodeMirrorEditor({ value, onChange, config }: Props) {
     editor.current = CodeMirror.fromTextArea(editorRef.current, config);
     editor.current.on('change', handleChange);
   }, []);
+
+  useEffect(() => {
+    if (!editor.current) {
+      return;
+    }
+
+    if (value && editor.current.getValue() !== value) {
+      editor.current.setValue(value);
+    }
+  }, [value]);
 
   return (
     <textarea
