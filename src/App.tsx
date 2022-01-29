@@ -28,14 +28,30 @@ import './App.css';
 import './one-dark.css';
 import FOLDER_ICON from './assets/icons/folder.svg';
 import SAVE_ICON from './assets/icons/save-file.svg';
+import MarkdownFile from './models/MarkdownFile';
 
 const NAVBAR_HEIGHT = '64px';
 
 function App() {
-  const [directory, activeFile, loadFile, saveFile, createFolder] = useDir();
+  const {
+    directory, loadFile, saveFile, createFile, createFolder, setActiveFile: updateActiveFileOfDir,
+  } = useDir();
+
+  const [activeFile, setActiveFile] = useState<MarkdownFile | undefined>();
+  if (directory && directory.activeFile && (directory.activeFile.id !== activeFile?.id)) {
+    setActiveFile(loadFile(directory.activeFile.id));
+  }
+
   const [theme, setTheme] = useState<Theme>(defaultTheme);
   const [editorValue, setEditorValue] = useState(activeFile
     ? activeFile.content : theme.defaultText);
+
+  useEffect(() => {
+    if (activeFile) {
+      setEditorValue(activeFile?.content);
+    }
+  }, [activeFile, setEditorValue]);
+
   const [showLeftMenu, setShowLeftMenu] = useState(false);
   const [fileChanged, setFileChanged] = useState(false);
 
@@ -82,6 +98,13 @@ function App() {
     }
   }, [activeFile, editorValue, setFileChanged]);
 
+  const onFileClick = useCallback((fileId) => {
+    if (directory) {
+      updateActiveFileOfDir(fileId);
+      setActiveFile(loadFile(fileId));
+    }
+  }, [directory, setActiveFile, updateActiveFileOfDir, loadFile]);
+
   return (
     <Row className="App gx-0">
       {showLeftMenu && (
@@ -89,7 +112,9 @@ function App() {
           <FileNavigator
             files={directory ? directory.files : []}
             selectedFile={activeFile?.id}
-            onCreateFolder={() => createFolder('Folder')}
+            onFileClick={onFileClick}
+            onCreateFile={(name) => createFile(name)}
+            onCreateFolder={(name) => createFolder(name)}
           />
         </Col>
       )}

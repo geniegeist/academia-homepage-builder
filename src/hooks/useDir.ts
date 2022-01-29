@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import MarkdownFile from '../models/MarkdownFile';
 import useLocalStorage from './useLocalStorage';
@@ -108,13 +109,17 @@ function initDirectory(): Directory {
 function useDir() {
   const [directory, setDirectory] = useLocalStorage<Directory | null>(DIR_KEY, null);
 
-  const loadFile = (fileId: string): MarkdownFile | null => {
-    const [file, setFile] = useLocalStorage(fileId, null);
+  const loadFile = (fileId: string): MarkdownFile | undefined => {
+    const item = window.localStorage.getItem(fileId);
+    if (!item) {
+      return undefined;
+    }
+    const file = JSON.parse(item) as (MarkdownFile | undefined);
     if (file) {
       return file;
     }
 
-    return null;
+    return undefined;
   };
 
   const saveFile = (fileId: string, content: string) => {
@@ -135,6 +140,29 @@ function useDir() {
     };
 
     window.localStorage.setItem(fileId, JSON.stringify(file));
+  };
+
+  const createFile = (name: string) => {
+    if (!directory) {
+      console.log('Cannot create file since directory does not exist');
+      return;
+    }
+
+    const id = uuid();
+    const file: MarkdownFile = {
+      id, name, content: '# Hello World', theme: 'default', type: 'markdown',
+    };
+    window.localStorage.setItem(id, JSON.stringify(file));
+
+    const fileRef: FileRef = {
+      id,
+      meta: { name },
+      type: 'file',
+    };
+    setDirectory({
+      files: [...directory.files, fileRef],
+      activeFile: fileRef,
+    });
   };
 
   const createFolder = (name: string) => {
@@ -163,12 +191,25 @@ function useDir() {
     window.localStorage.setItem(id, JSON.stringify(folder));
   };
 
-  let activeFile: MarkdownFile | null = null;
-  if (directory?.activeFile) {
-    activeFile = loadFile(directory.activeFile.id);
-  }
+  const setActiveFile = (fileId: string) => {
+    if (!directory) {
+      return;
+    }
 
-  return [directory, activeFile, loadFile, saveFile, createFolder] as const;
+    const fileRef = directory.files.find((s) => s.id === fileId);
+    if (!fileRef) {
+      return;
+    }
+
+    setDirectory({
+      files: directory.files,
+      activeFile: fileRef,
+    });
+  };
+
+  return {
+    directory, setActiveFile, loadFile, saveFile, createFile, createFolder,
+  } as const;
 }
 
 export default useDir;
