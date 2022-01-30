@@ -71,19 +71,20 @@ function FileNavigator({
           type="button"
           onClick={onDeleteFile}
         >
-          <img alt="Delete file" src={TRASH_ICON} width="16px" style={{ opacity: 0.64 }} />
+          <img alt="Delete file" src={TRASH_ICON} width="16px" />
         </IconButton>
         <IconButton
           type="button"
           onClick={renameFile}
         >
-          <img alt="Rename file" src={PEN_ICON} width="22px" style={{ opacity: 0.64 }} />
+          <img alt="Rename file" src={PEN_ICON} width="22px" />
         </IconButton>
         <IconButton
           type="button"
           onClick={onClose}
+          style={{ marginLeft: 'auto' }}
         >
-          <img alt="Hide menu" src={CLOSE_ICON} width="18px" style={{ opacity: 0.64 }} />
+          <img alt="Hide menu" src={CLOSE_ICON} width="18px" />
         </IconButton>
       </TopNavbar>
       <List>
@@ -131,7 +132,7 @@ const List = styled.ul`
   margin: 0;
   padding: 0;
   list-style-type: none;
-  font-size: 0.9em;
+  font-size: 0.9rem;
 `;
 
 const El = styled.li<{ selected: boolean }>`
@@ -141,6 +142,11 @@ const El = styled.li<{ selected: boolean }>`
   color: rgba(0,0,0,0.7);
   &:hover {
     background-color: rgba(0,0,0,0.25);
+  }
+  input {
+    font-size: 0.9rem;
+    border: 0;
+    border-radius: 4px;
   }
 `;
 
@@ -154,6 +160,9 @@ const IconButton = styled.button`
     background-color: rgba(0,0,0,0.1);
   }
   border-radius: 4px;
+  img {
+    opacity: 0.64;
+  }
 `;
 
 export default FileNavigator;

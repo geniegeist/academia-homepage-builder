@@ -39,15 +39,16 @@ injectCSSFile(cssConfig: CSSConfig[], rootCSSClass: string, rootCSSDeclaration: 
   cssConfig.forEach((css) => {
     if (css.selector) {
       root = `${root}
-      ${css.selector} {
-        ${css.declaration}
-      }`;
+
+${css.selector} {
+  ${css.declaration}
+}`;
     } else {
       root = `${root}
-      ${rootCSSClass} {
-        ${css.declaration}
-        ${rootCSSDeclaration}
-      }`;
+${rootCSSClass} {
+  ${css.declaration}
+  ${rootCSSDeclaration}
+}`;
     }
   });
 

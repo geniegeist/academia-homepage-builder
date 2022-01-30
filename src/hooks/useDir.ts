@@ -2,8 +2,8 @@ import { useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
 import MarkdownFile from '../models/MarkdownFile';
 import useLocalStorage from './useLocalStorage';
-import { defaultText as amandaText } from '../themes/amanda-burcroff';
-import { defaultText as dexterText } from '../themes/dexter-chua';
+import { defaultText as modernText } from '../themes/modern';
+import { defaultText as classicText } from '../themes/classic';
 
 interface Directory {
   files: FileRef[];
@@ -98,38 +98,38 @@ function initDirectory(): Directory {
     type: 'markdown',
   };
 
-  const amandaId = uuid();
-  const amanda: MarkdownFile = {
-    id: amandaId,
-    name: 'Amanda Example',
-    theme: 'amanda',
-    content: amandaText,
+  const modernId = uuid();
+  const modern: MarkdownFile = {
+    id: modernId,
+    name: 'Modern Example',
+    theme: 'modern',
+    content: modernText,
     type: 'markdown',
   };
-  const amandaRef: FileRef = {
-    id: amanda.id, meta: { name: amanda.name }, type: 'file',
+  const modernRef: FileRef = {
+    id: modern.id, meta: { name: modern.name }, type: 'file',
   };
 
-  const dexterId = uuid();
-  const dexter: MarkdownFile = {
-    id: dexterId,
-    name: 'Dexter Example',
-    theme: 'dexter',
-    content: dexterText,
+  const classicId = uuid();
+  const classic: MarkdownFile = {
+    id: classicId,
+    name: 'Classic Example',
+    theme: 'classic',
+    content: classicText,
     type: 'markdown',
   };
-  const dexterRef: FileRef = {
-    id: dexter.id, meta: { name: dexter.name }, type: 'file',
+  const classicRef: FileRef = {
+    id: classic.id, meta: { name: classic.name }, type: 'file',
   };
 
   const initialDir: Directory = {
-    files: [ref, amandaRef, dexterRef],
+    files: [ref, modernRef, classicRef],
     lastOpenedFile: ref,
   };
 
   window.localStorage.setItem(id, JSON.stringify(file));
-  window.localStorage.setItem(amandaId, JSON.stringify(amanda));
-  window.localStorage.setItem(dexterId, JSON.stringify(dexter));
+  window.localStorage.setItem(modernId, JSON.stringify(modern));
+  window.localStorage.setItem(classicId, JSON.stringify(classic));
 
   return initialDir;
 }
@@ -150,7 +150,7 @@ export function loadFile(fileId: string): MarkdownFile | undefined {
 function useDir() {
   const [directory, setDirectory] = useLocalStorage<Directory>(DIR_KEY);
 
-  const saveFile = useCallback((fileId: string, content: string) => {
+  const saveFile = useCallback((fileId: string, content: string, theme: string) => {
     const item = window.localStorage.getItem(fileId);
     if (!item) {
       return;
@@ -160,6 +160,7 @@ function useDir() {
     const file: MarkdownFile = {
       ...referenceFile!,
       content,
+      theme,
     };
 
     window.localStorage.setItem(fileId, JSON.stringify(file));

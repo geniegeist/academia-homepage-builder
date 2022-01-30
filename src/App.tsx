@@ -69,8 +69,11 @@ function App() {
   };
 
   const onThemeChange = (evt: any) => {
-    const { value }: { value: string } = evt.target;
-    setTheme(value);
+    const newTheme = evt.target.value;
+    setTheme(newTheme);
+    if (activeFileId) {
+      saveFile(activeFileId, editorValue, newTheme);
+    }
   };
 
   const buildWebsite = () => {
@@ -78,7 +81,7 @@ function App() {
     if (!activeFile) {
       return;
     }
-    saveFile(activeFile.id, editorValue);
+    saveFile(activeFile.id, editorValue, theme.name);
     build(editorValue, (html) => {
       const zip = new JSZip();
       zip.file('index.html', theme.generateHTML(html));
@@ -91,16 +94,15 @@ function App() {
   };
 
   const saveFileCallback = (evt: any) => {
-    const activeFile = getActiveFile();
-    if (activeFile) {
-      saveFile(activeFile.id, editorValue);
+    if (activeFileId) {
+      saveFile(activeFileId, editorValue, theme.name);
       setFileChanged(false);
     }
   };
 
   const onFileClick = (fileId: string) => {
     if (activeFileId) {
-      saveFile(activeFileId, editorValue);
+      saveFile(activeFileId, editorValue, theme.name);
       setFileChanged(false);
     }
     justOpenedFile.current = true;
@@ -123,7 +125,7 @@ function App() {
   return (
     <Row className="App gx-0">
       {showLeftMenu && (
-        <Col xs={12} sm={3} md={3} style={{ height: '100vh' }}>
+        <Col xs={12} sm={3} lg={2} style={{ height: '100vh' }}>
           <FileNavigator
             files={directory.files}
             selectedFile={getActiveFile()?.id}
@@ -136,24 +138,26 @@ function App() {
           />
         </Col>
       )}
-      <Col sm={showLeftMenu ? 9 : 12} md={showLeftMenu ? 9 : 12}>
+      <Col sm={showLeftMenu ? 9 : 12} lg={showLeftMenu ? 10 : 12}>
         <Navbar bg="dark" variant="dark" className="px-1" style={{ height: NAVBAR_HEIGHT }}>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link onClick={() => setShowLeftMenu(!showLeftMenu)}><img className="icon-folder" alt="folder icon" width="24px" src={FOLDER_ICON} /></Nav.Link>
-              <Nav.Link onClick={saveFileCallback}>
+              <Nav.Link onClick={() => setShowLeftMenu(!showLeftMenu)} style={{ outline: 0 }}>
+                <img className="icon-folder" alt="folder icon" width="24px" src={FOLDER_ICON} />
+              </Nav.Link>
+              <Nav.Link onClick={saveFileCallback} style={{ outline: 0 }}>
                 <img className="icon-save" alt="folder icon" width="22px" src={SAVE_ICON} />
                 {fileChanged && <span className="px-2">Unsaved changes</span>}
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
 
-          <Form className="mx-3">
-            <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
-              <Form.Select value={theme.name} onChange={onThemeChange} style={{ maxWidth: '200px' }} size="sm">
-                <option value="amanda">Amanda Theme</option>
-                <option value="dexter">Dexter Theme</option>
+          <Form>
+            <Form.Group>
+              <Form.Select value={theme.name} onChange={onThemeChange} size="sm">
+                <option value="classic">Classic Theme</option>
                 <option value="default">Default Theme</option>
+                <option value="modern">Modern Theme</option>
               </Form.Select>
             </Form.Group>
           </Form>

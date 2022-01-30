@@ -1,5 +1,28 @@
-import { Theme } from './theme';
+import { CSSConfig, Theme } from './theme';
 import './default.css';
+
+function cssConfig(): CSSConfig[] {
+  return [{
+    declaration: `color: rgba(41, 41, 41, 1);
+  padding: 1em;`,
+  }, {
+    selector: 'h1, h2, h3, h4, h5, h6',
+    declaration: `font-weight: bold;
+  line-height: 2;`,
+  }, {
+    selector: 'h1',
+    declaration: 'line-height: 1.5 !important;',
+  }, {
+    selector: 'ul li',
+    declaration: 'margin: 0.4em 0;',
+  }, {
+    selector: 'code',
+    declaration: `font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  color: #d63384;
+  font-size: 0.875rem;
+  word-wrap: break-word;`,
+  }];
+}
 
 const theme: Theme = {
   name: 'default',
@@ -53,12 +76,13 @@ $$
   \\int^b_a F_x(\\varphi^\\lambda) \\mathrm{d}x
 $$
 `,
-  css: () => [],
+  css: cssConfig,
   generateHTML: (content: string) => {
     const html = `<!DOCTYPE html>
 <html>
 <head>
-  <title>TITLE</title>
+  <!-- Change title here -->
+  <title>My Resume</title>
   <meta charset="utf-8" />
   <link rel="stylesheet" href="stylesheet.css">
 </head>
@@ -74,8 +98,15 @@ ${content}
   },
   generateCSS: () => {
     const css = `html {
+  margin: 0;
+  padding: 0;
   display: flex;
   justify-content: center;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen','Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 img {
@@ -83,28 +114,23 @@ img {
 }
 
 .wrapper {
-  margin-top: 1em;
-  width: 600px;
-  font-family: 'Lora', serif;
-  padding: calc(1em + 1ex);
+  margin-top: 1rem;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
-.wrapper h1 {
-  font-size: 2.2em;
-  font-weight: 500;
+@media (min-width: 576px) {
+  .wrapper {
+    width: 500px;
+  }
 }
 
-.wrapper h2 {
-  font-family: 'Marcellus SC', serif;
-  color: #a81010;
-  font-size: 1.4em;
-  font-weight: 500;
-}
-
-.wrapper p {
-  font-size: 1em;
-}
-    `;
+@media (min-width: 768px) {
+  .wrapper {
+    width: 640px;
+  }
+}`;
     return css;
   },
 };

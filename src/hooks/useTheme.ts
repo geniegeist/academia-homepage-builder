@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { Theme } from '../themes/theme';
 import defaultTheme from '../themes/default';
-import amandaTheme from '../themes/amanda-burcroff';
-import dexterTheme from '../themes/dexter-chua';
+import modernTheme from '../themes/modern';
+import classicTheme from '../themes/classic';
 
 function useTheme(initialTheme = defaultTheme.name) {
   const loadTheme = useCallback((name: string | undefined): Theme => {
@@ -10,16 +10,16 @@ function useTheme(initialTheme = defaultTheme.name) {
       return defaultTheme;
     }
 
-    if (name === amandaTheme.name) {
-      return amandaTheme;
+    if (name === modernTheme.name) {
+      return modernTheme;
     }
 
-    if (name === dexterTheme.name) {
-      return dexterTheme;
+    if (name === classicTheme.name) {
+      return classicTheme;
     }
 
     return defaultTheme;
-  }, [defaultTheme, amandaTheme, dexterTheme]);
+  }, [defaultTheme, modernTheme, classicTheme]);
 
   const [theme, updateTheme] = useState<Theme>(loadTheme(initialTheme));
   const setTheme = useCallback((name: string) => {
