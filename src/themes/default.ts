@@ -1,5 +1,4 @@
 import { CSSConfig, Theme } from './theme';
-import './default.css';
 
 function cssConfig(): CSSConfig[] {
   return [{
@@ -24,19 +23,17 @@ function cssConfig(): CSSConfig[] {
   }];
 }
 
-const theme: Theme = {
-  name: 'default',
-  defaultText: `# Welcome 
+export const defaultText = `# Welcome to ResumeEdit!
 
 ---
 
-Hi! I’m a Markdown file and I will help you to create your **personal homepage** in *under two minutes*. If you want to learn more about it, you can read me and edit me. Once you have finished with me, you can download your homepage as a HTML file and upload it to a server of your choice.
+Hi! I’m a Markdown file and I will help you to create your **resume homepage** in *under two minutes*. If you want to learn more about it, you can read me and edit me. Once you have finished with me, you can download your homepage as a \`HTML\` file and upload it to a server of your choice.
 
 ## What is Markdown?
 
-Markdown is a *easy-to-learn* language for creating plain documents. Here we use Markdown to create homepages.
+Markdown is an *easy-to-learn* language for creating documents. Here we use Markdown to create \`HTML\` files.
 
-To add headlines use the hashtag \`# Title\` followed by a title. Add more hashtags to change the hierarchy, e.g. \`## Not so important title\`.
+To add headlines use the hashtag \`#\` symbol. Add more hashtags to change the hierarchy, e.g. \`##\`:
 
 # Header 1
 ## Header 2
@@ -44,9 +41,17 @@ To add headlines use the hashtag \`# Title\` followed by a title. Add more hasht
 #### Header 4
 ##### Header 5
 
-To emphasize text use the asterisk: *italic*, **bold**, ***bold and italic***.
+To emphasize text use the asterisk symbol \`*\`: 
 
-As you can see you create lists with \`-\` or \`1. 2. 3.\`, e.g.
+*italic*, **bold**, ***bold and italic***.
+
+You can even use \`LaTex\` to render math formulas, e.g. $x^2$ or
+
+$$
+  \\int^b_a F_x(\\varphi^\\lambda) \\mathrm{d}x
+$$
+
+You can create list by starting a new line with \`-\` or \`1. 2. 3.\`, e.g.
 
 1. first item
 2. second item
@@ -56,7 +61,7 @@ As you can see you create lists with \`-\` or \`1. 2. 3.\`, e.g.
 - item
 - item
 
-Here comes a link and an image
+To insert links and images see the following two examples
 
 [Click me](https://www.wikipedia.org)
 
@@ -65,17 +70,23 @@ Here comes a link and an image
 
 ## Themes
 
-Now you know everything to create your own homepage. We recommend you to explore our awesome themes!
+Now you know everything to create your own homepage. We recommend exploring our awesome themes. Open the left menu by clicking on the folder icon in the top left corner. Then open one of the example files!
 
+**A preview of our themes**
 
-## Advanced  
+![Classic Theme](https://i.imgur.com/5iXaVMU.png)
 
-You can write LaTex $x + y = \\frac{x+y}{7 - 6}$
+![Modern Theme](https://i.imgur.com/QlMr59l.png)
 
-$$
-  \\int^b_a F_x(\\varphi^\\lambda) \\mathrm{d}x
-$$
-`,
+## Publishing Your Resume
+
+Build your website by clicking on the button in the top right corner. Open the \`zip\` file and inspect the \`HTML\` and \`CSS\` file. Upload both files to a webserver. You can use the webserver of your department (e.g. if you are a Berkeley student, look [here](https://iris.eecs.berkeley.edu/faq/web/homepages/)) or use [github pages](https://pages.github.com/).
+
+`;
+
+const theme: Theme = {
+  name: 'default',
+  defaultText,
   css: cssConfig,
   generateHTML: (content: string) => {
     const html = `<!DOCTYPE html>
