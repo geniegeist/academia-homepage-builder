@@ -150,7 +150,7 @@ function App() {
         </Navbar>
         <Container fluid>
           <Row className="gx-0">
-            <Col sm className="overflow-scroll" style={{ height: `calc(100vh - ${NAVBAR_HEIGHT})` }}>
+            <Col sm style={{ height: `calc(100vh - ${NAVBAR_HEIGHT})` }}>
               <form style={{ height: '100%' }}>
                 <CodeMirrorEditor
                   value={editorValue}
