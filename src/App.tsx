@@ -164,7 +164,7 @@ function App() {
                 />
               </form>
             </Col>
-            <Result sm className="overflow-scroll d-flex justify-content-center" $cssConfig={theme.css()}>
+            <Result sm className="d-flex justify-content-center" $cssConfig={theme.css()} style={{ overflowY: 'scroll' }}>
               <ReactMarkdownWrapper>
                 <ReactMarkdown
                   remarkPlugins={[remarkMath, remarkGfm]}
@@ -172,7 +172,7 @@ function App() {
                 >
                   {editorValue}
                 </ReactMarkdown>
-                <div style={{ height: '2em' }} />
+                <div style={{ height: '64px' }} />
               </ReactMarkdownWrapper>
             </Result>
           </Row>
@@ -183,7 +183,7 @@ function App() {
 }
 
 const Result = styled(Col) <{ $cssConfig: CSSConfig[] }>`
-  height: calc(100vh - 64px);
+  height: calc(100vh - 50px);
   img {
     width: 100%;
   }
@@ -191,7 +191,6 @@ const Result = styled(Col) <{ $cssConfig: CSSConfig[] }>`
 `;
 
 const ReactMarkdownWrapper = styled.div`
-  padding: calc(1em + 1ex);
   max-width: 640px;
 `;
 
