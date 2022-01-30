@@ -150,7 +150,7 @@ function App() {
         </Navbar>
         <Container fluid>
           <Row className="gx-0">
-            <Col sm style={{ height: `calc(100vh - ${NAVBAR_HEIGHT})` }}>
+            <Col xs={6} style={{ height: `calc(100vh - ${NAVBAR_HEIGHT})` }}>
               <form style={{ height: '100%' }}>
                 <CodeMirrorEditor
                   value={editorValue}
@@ -164,7 +164,7 @@ function App() {
                 />
               </form>
             </Col>
-            <Result sm className="d-flex justify-content-center" $cssConfig={theme.css()} style={{ overflowY: 'scroll' }}>
+            <Result xs={6} className="d-flex justify-content-center" $cssConfig={theme.css()} style={{ overflowY: 'scroll' }}>
               <ReactMarkdownWrapper>
                 <ReactMarkdown
                   remarkPlugins={[remarkMath, remarkGfm]}
