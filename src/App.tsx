@@ -149,7 +149,7 @@ function App() {
           </Button>
         </Navbar>
         <Container fluid>
-          <Row className="gx-0 overflow-scroll">
+          <Row className="gx-0">
             <Col sm className="overflow-scroll" style={{ height: `calc(100vh - ${NAVBAR_HEIGHT})` }}>
               <form style={{ height: '100%' }}>
                 <CodeMirrorEditor
@@ -192,6 +192,7 @@ const Result = styled(Col) <{ $cssConfig: CSSConfig[] }>`
 
 const ReactMarkdownWrapper = styled.div`
   max-width: 640px;
+  padding-top: 2em;
 `;
 
 export default App;
