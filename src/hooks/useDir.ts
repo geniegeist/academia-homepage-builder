@@ -216,8 +216,48 @@ function useDir() {
     });
   }, [directory, setDirectory]);
 
+  const deleteFile = useCallback((fileId: string) => {
+    window.localStorage.removeItem(fileId);
+
+    let { lastOpenedFile } = directory;
+    if (directory.lastOpenedFile?.id === fileId) {
+      lastOpenedFile = undefined;
+    }
+    setDirectory({
+      files: directory.files.filter((f) => f.id !== fileId),
+      lastOpenedFile,
+    });
+  }, [directory, setDirectory]);
+
+  const renameFile = (fileId: string, newName: string) => {
+    const item = window.localStorage.getItem(fileId);
+    if (!item) {
+      console.log('Cannot find file with id:', fileId);
+      return;
+    }
+    const file = JSON.parse(item) as MarkdownFile;
+    if (!file) {
+      console.log('Cannot parse item with content:', item);
+      return;
+    }
+    file.name = newName;
+    window.localStorage.setItem(fileId, JSON.stringify(file));
+    // update dir
+    const newDir = directory;
+    const newFilesDir = newDir.files.map((f) => {
+      if (f.id !== fileId) {
+        return f;
+      }
+      const newF = f;
+      newF.meta.name = newName;
+      return newF;
+    });
+    newDir.files = newFilesDir;
+    setDirectory(newDir);
+  };
+
   return {
-    directory, setLastOpenedFile, saveFile, createFile, createFolder,
+    directory, setLastOpenedFile, saveFile, createFile, deleteFile, renameFile, createFolder,
   } as const;
 }
 

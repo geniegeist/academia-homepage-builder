@@ -32,11 +32,11 @@ const NAVBAR_HEIGHT = '50px';
 
 function App() {
   const {
-    directory, saveFile, createFile, createFolder, setLastOpenedFile,
+    directory, saveFile, createFile, deleteFile, renameFile, createFolder, setLastOpenedFile,
   } = useDir();
   const [activeFileId, setActiveFileId, getActiveFile] = useActiveFile(directory.lastOpenedFile?.id);
   const [theme, setTheme] = useTheme(getActiveFile()?.theme);
-  const [editorValue, setEditorValue] = useState(getActiveFile()?.content ?? '# Hello World');
+  const [editorValue, setEditorValue] = useState(getActiveFile()?.content ?? '# Edit me');
   const justOpenedFile = useRef(false);
   // observe when active file changes
   // load content and set theme of the
@@ -108,20 +108,35 @@ function App() {
     setActiveFileId(fileId);
   };
 
+  const onDeleteFile = () => {
+    if (activeFileId) {
+      deleteFile(activeFileId);
+    }
+  };
+
+  const onRenameFile = (newName: string) => {
+    if (activeFileId) {
+      renameFile(activeFileId, newName);
+    }
+  };
+
   return (
     <Row className="App gx-0">
       {showLeftMenu && (
-        <Col xs={12} sm={3} md={2} style={{ height: '100vh' }}>
+        <Col xs={12} sm={3} md={3} style={{ height: '100vh' }}>
           <FileNavigator
             files={directory.files}
             selectedFile={getActiveFile()?.id}
             onFileClick={onFileClick}
             onCreateFile={(name) => createFile(name)}
             onCreateFolder={(name) => createFolder(name)}
+            onDeleteFile={onDeleteFile}
+            onRenameFile={onRenameFile}
+            onClose={() => setShowLeftMenu(false)}
           />
         </Col>
       )}
-      <Col sm={showLeftMenu ? 9 : 12} md={showLeftMenu ? 10 : 12}>
+      <Col sm={showLeftMenu ? 9 : 12} md={showLeftMenu ? 9 : 12}>
         <Navbar bg="dark" variant="dark" className="px-1" style={{ height: NAVBAR_HEIGHT }}>
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
@@ -135,11 +150,10 @@ function App() {
 
           <Form className="mx-3">
             <Form.Group style={{ display: 'flex', alignItems: 'center' }}>
-              <Form.Label style={{ color: 'white', paddingRight: '0.8em', margin: 0 }}>Theme: </Form.Label>
               <Form.Select value={theme.name} onChange={onThemeChange} style={{ maxWidth: '200px' }} size="sm">
-                <option value="amanda">Amanda</option>
-                <option value="dexter">Dexter</option>
-                <option value="default">Default</option>
+                <option value="amanda">Amanda Theme</option>
+                <option value="dexter">Dexter Theme</option>
+                <option value="default">Default Theme</option>
               </Form.Select>
             </Form.Group>
           </Form>
@@ -191,8 +205,9 @@ const Result = styled(Col) <{ $cssConfig: CSSConfig[] }>`
 `;
 
 const ReactMarkdownWrapper = styled.div`
+  width: 100%;
   max-width: 640px;
-  padding-top: 2em;
+  padding: 1em;
 `;
 
 export default App;

@@ -25,7 +25,8 @@
         "@typescript-eslint/no-unused-vars": "off",
         "@typescript-eslint/no-use-before-define": "off",
         "react/require-default-props": "off",
-        "max-len": "off"
+        "max-len": "off",
+        "jsx-a11y/no-autofocus": "off"
     },
     "ignorePatterns": ["codemirror.js"]
 }
