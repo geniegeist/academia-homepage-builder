@@ -12,6 +12,11 @@ Every serious graduate student needs a resume website. With ResumeEdit you can e
 - Syntax highlightning
 - File system
 
+## Upcoming features
+
+[ ] dark mode
+[ ] social media integration
+
 ## Used technologies
 
 To render markdown the react library `react-markdown` is used. The editor is powered by `CodeMirror`.
