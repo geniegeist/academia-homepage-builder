@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="60px" viewBox="0 0 48 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>file-plus</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M42,0 C45.3137085,-6.08718376e-16 48,2.6862915 48,6 L48,54 C48,57.3137085 45.3137085,60 42,60 L6,60 C2.6862915,60 4.05812251e-16,57.3137085 0,54 L0,6 C-4.05812251e-16,2.6862915 2.6862915,-2.05581688e-15 6,0 L42,0 Z M21,30 L15,30 L15,39 L6,39 L6,45 L15,45 L15,54 L21,54 L21,45 L30,45 L30,39 L21,39 L21,30 Z" id="file-plus" fill="#000000"></path>
+    </g>
+</svg>
