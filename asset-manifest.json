@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/resumeedit/static/css/main.7208f803.css",
-    "main.js": "/resumeedit/static/js/main.5f595663.js",
+    "main.js": "/resumeedit/static/js/main.eede334c.js",
     "static/media/settings.svg": "/resumeedit/static/media/settings.1157a90362e87132153f1b3fd65699ab.svg",
     "index.html": "/resumeedit/index.html",
     "static/media/save-file.svg": "/resumeedit/static/media/save-file.8457e355ffcb9a437a3688fc002f579d.svg",
@@ -11,10 +11,10 @@
     "static/media/close.svg": "/resumeedit/static/media/close.9d9df846392247242b52ffeb7bd2bfe8.svg",
     "static/media/trash.svg": "/resumeedit/static/media/trash.ea3419fe50a906ce5d49f12effc8c081.svg",
     "main.7208f803.css.map": "/resumeedit/static/css/main.7208f803.css.map",
-    "main.5f595663.js.map": "/resumeedit/static/js/main.5f595663.js.map"
+    "main.eede334c.js.map": "/resumeedit/static/js/main.eede334c.js.map"
   },
   "entrypoints": [
     "static/css/main.7208f803.css",
-    "static/js/main.5f595663.js"
+    "static/js/main.eede334c.js"
   ]
 }
