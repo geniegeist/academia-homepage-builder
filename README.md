@@ -14,8 +14,9 @@ Every serious graduate student needs a resume website. With ResumeEdit you can e
 
 ## Upcoming features
 
-[ ] dark mode
-[ ] social media integration
+- dark mode
+- social media integration
+- and much more
 
 ## Used technologies
 
