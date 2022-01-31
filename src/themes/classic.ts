@@ -42,6 +42,19 @@ function cssConfig(): CSSConfig[] {
   color: #d63384;
   font-size: 0.875rem;
   word-wrap: break-word;`,
+  }, {
+    selector: 'table',
+    declaration: `border-color: grey;
+  border-spacing: 2px;
+  max-width: 100%;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2em 0;`,
+  }, {
+    selector: 'table th, table td',
+    declaration: `padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;`,
   }];
 }
 
@@ -53,7 +66,13 @@ I have been a PhD student in mathematics at [Berkeley](https://math.berkeley.edu
 
 You can email me at [marius.hoffman@fake.berkeley.edu](mailto:marius.hoffman@fake.berkeley.edu).
 
-  
+## Education
+
+|   Major           | University        | Year          |
+|-----------        | -------------     | ------------- |
+| MSc Mathematics   | UC Berkeley       | since 2021    | 
+| BSc Mathematics   | Emory University  | 2017-2021     |
+
 ## Research
   
 * [Some Invertibility Results for Parabolic Categories](https://thatsmathematics.com/mathgen/paper.php?nameType%5B1%5D=custom&customName%5B1%5D=Marius+Hoffman&nameType%5B2%5D=generic&nameType%5B3%5D=custom&customName%5B3%5D=&nameType%5B4%5D=custom&customName%5B4%5D=&seed=1315851073&format=pdf), 2021. With P. Wilson.

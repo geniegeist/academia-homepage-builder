@@ -189,7 +189,7 @@ function App() {
           <Row className="gx-0">
             <Col
               xs={6}
-              style={{ height: 'calc(100vh - 50px)' }}
+              style={{ minHeight: 'calc(100vh - 50px)', height: 'calc(100vh - 50px)' }}
               className="overflow-scroll"
             >
               <form>

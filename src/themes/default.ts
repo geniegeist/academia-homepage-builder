@@ -20,6 +20,19 @@ function cssConfig(): CSSConfig[] {
   color: #d63384;
   font-size: 0.875rem;
   word-wrap: break-word;`,
+  }, {
+    selector: 'table',
+    declaration: `border-color: grey;
+  border-spacing: 2px;
+  max-width: 100%;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2em 0;`,
+  }, {
+    selector: 'table th, table td',
+    declaration: `padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;`,
   }];
 }
 
@@ -66,6 +79,20 @@ To insert links and images see the following two examples
 [Click me](https://www.wikipedia.org)
 
 ![alternative text](https://images.unsplash.com/photo-1517485883175-4ae93081b334?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80)
+
+Inserting tables is also a very easy task
+
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+
+You can even change the alignment of the columns
+
+| Left-aligned | Center-aligned | Right-aligned |
+| :---         |     :---:      |          ---: |
+| git status   | git status     | git status    |
+| git diff     | git diff       | git diff      |
 
 
 ## Themes

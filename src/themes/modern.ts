@@ -57,6 +57,19 @@ function cssConfig(): CSSConfig[] {
   color: #d63384;
   font-size: 0.875rem;
   word-wrap: break-word;`,
+  }, {
+    selector: 'table',
+    declaration: `border-color: grey;
+  border-spacing: 2px;
+  max-width: 100%;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2em 0;`,
+  }, {
+    selector: 'table th, table td',
+    declaration: `padding: 0.75rem;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;`,
   }];
 }
 
@@ -71,6 +84,7 @@ export const defaultText = `# Marius Hoffman
 -----
   
 * [About Me](#about-me)
+* [Education](#education)
 * [Research](#research)
 * [Projects](#projects)
   
@@ -81,6 +95,13 @@ export const defaultText = `# Marius Hoffman
 I have been a PhD student in mathematics at [Berkeley](https://math.berkeley.edu/) since August 2021. My advisor is [Prof. Hopkins](https://math.berkeley.edu/) and my main research interest is [tropical geometry](https://en.wikipedia.org/wiki/Tropical_geometry). Previously, I did my undergraduate at [Emory University](https://www.math.emory.edu/home/) (2017-2021). 
 
 You can email me at [marius.hoffman@fake.berkeley.edu](mailto:marius.hoffman@fake.berkeley.edu).
+
+## Education
+
+|   Major           | University        | Year          |
+|-----------        | -------------     | ------------- |
+| MSc Mathematics   | UC Berkeley       | since 2021    | 
+| BSc Mathematics   | Emory University  | 2017-2021     |
 
 ## Research
     

@@ -140,8 +140,8 @@ const El = styled.li<{ selected: boolean }>`
 `;
 
 const IconButton = styled.button`
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   margin: 0.05em;
   background-color: transparent;
   border: none;
