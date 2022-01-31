@@ -4,7 +4,13 @@ Every serious graduate student needs a resume website. With ResumeEdit you can e
 
 [Demo](https://geniegeist.github.io/resumeedit/) 
 
-In progress...
+![Modern Theme](https://i.imgur.com/p3nbeHO.png)
+
+## Features
+
+- Live preview
+- Syntax highlightning
+- File system
 
 ## Used technologies
 
