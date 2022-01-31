@@ -23,16 +23,18 @@ import useWebsiteBuilder from './hooks/useWebsiteBuilder';
 import useTheme from './hooks/useTheme';
 import useActiveFile from './hooks/useActiveFile';
 import { CSSConfig, injectCSS } from './themes/theme';
+import SettingsModal from './SettingsModal';
 import './App.css';
 import './one-dark.css';
 import FOLDER_ICON from './assets/icons/folder.svg';
 import SAVE_ICON from './assets/icons/save-file.svg';
+import SETTINGS_ICON from './assets/icons/settings.svg';
 
 const NAVBAR_HEIGHT = '50px';
 
 function App() {
   const {
-    directory, saveFile, createFile, deleteFile, renameFile, createFolder, setLastOpenedFile,
+    directory, saveFile, createFile, deleteFile, renameFile, createFolder, setLastOpenedFile, reset,
   } = useDir();
   const [activeFileId, setActiveFileId, getActiveFile] = useActiveFile(directory.lastOpenedFile?.id);
   const [theme, setTheme] = useTheme(getActiveFile()?.theme);
@@ -51,6 +53,7 @@ function App() {
 
   const [fileChanged, setFileChanged] = useState(false);
   const [showLeftMenu, setShowLeftMenu] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [build] = useWebsiteBuilder();
 
   // Callbacks
@@ -122,10 +125,16 @@ function App() {
     }
   };
 
+  const onResetFiles = () => {
+    reset();
+    setShowSettings(false);
+    window.location.reload();
+  };
+
   return (
     <Row className="App gx-0">
       {showLeftMenu && (
-        <Col xs={12} sm={3} lg={2} style={{ height: '100vh' }}>
+        <Col xs={12} sm={4} md={3} style={{ height: '100vh' }}>
           <FileNavigator
             files={directory.files}
             selectedFile={getActiveFile()?.id}
@@ -138,8 +147,14 @@ function App() {
           />
         </Col>
       )}
-      <Col sm={showLeftMenu ? 9 : 12} lg={showLeftMenu ? 10 : 12}>
-        <Navbar bg="dark" variant="dark" className="px-1" style={{ height: NAVBAR_HEIGHT }}>
+      <Col sm={showLeftMenu ? 8 : 12} md={showLeftMenu ? 9 : 12}>
+        <Navbar
+          bg="dark"
+          variant="dark"
+          style={{
+            height: NAVBAR_HEIGHT, position: 'fixed', top: 0, width: '100%',
+          }}
+        >
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <Nav.Link onClick={() => setShowLeftMenu(!showLeftMenu)} style={{ outline: 0 }}>
@@ -151,6 +166,10 @@ function App() {
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
+
+          <Nav.Link onClick={() => setShowSettings(true)} style={{ outline: 0 }}>
+            <img className="icon-save" alt="folder icon" width="22px" src={SETTINGS_ICON} />
+          </Nav.Link>
 
           <Form>
             <Form.Group>
@@ -166,10 +185,14 @@ function App() {
             Build website
           </Button>
         </Navbar>
-        <Container fluid>
+        <Container fluid style={{ position: 'fixed', top: '50px' }}>
           <Row className="gx-0">
-            <Col xs={6} style={{ height: `calc(100vh - ${NAVBAR_HEIGHT})` }}>
-              <form style={{ height: '100%' }}>
+            <Col
+              xs={6}
+              style={{ height: 'calc(100vh - 50px)' }}
+              className="overflow-scroll"
+            >
+              <form>
                 <CodeMirrorEditor
                   value={editorValue}
                   onChange={onCodeMirrorChange}
@@ -180,6 +203,7 @@ function App() {
                     lineNumbers: true,
                   }}
                 />
+                <div style={{ height: '100px', backgroundColor: '#282C34' }} />
               </form>
             </Col>
             <Result xs={6} className="d-flex justify-content-center" $cssConfig={theme.css()} style={{ overflowY: 'scroll' }}>
@@ -196,6 +220,11 @@ function App() {
           </Row>
         </Container>
       </Col>
+      <SettingsModal
+        show={showSettings}
+        onHide={() => setShowSettings(false)}
+        onReset={onResetFiles}
+      />
     </Row>
   );
 }

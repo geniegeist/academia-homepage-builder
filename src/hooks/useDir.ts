@@ -209,8 +209,12 @@ function useDir() {
     setDirectory(newDir);
   };
 
+  const reset = () => {
+    window.localStorage.clear();
+  };
+
   return {
-    directory, setLastOpenedFile, saveFile, createFile, deleteFile, renameFile, createFolder,
+    directory, setLastOpenedFile, saveFile, createFile, deleteFile, renameFile, createFolder, reset,
   } as const;
 }
 
